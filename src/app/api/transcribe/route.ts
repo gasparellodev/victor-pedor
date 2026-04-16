@@ -1,0 +1,28 @@
+import { NextResponse } from "next/server";
+import { z } from "zod/v4";
+import { submitTranscription } from "@/lib/assemblyai/client";
+
+const RequestSchema = z.object({
+  blobUrl: z.url(),
+});
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const parsed = RequestSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid request. Provide a valid 'blobUrl'." },
+        { status: 400 }
+      );
+    }
+
+    const transcriptId = await submitTranscription(parsed.data.blobUrl);
+
+    return NextResponse.json({ transcriptId });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Transcription submission failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
