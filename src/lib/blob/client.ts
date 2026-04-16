@@ -21,8 +21,8 @@ export async function uploadVideo(file: File): Promise<{ url: string }> {
     );
   }
 
-  const blob = await put(file.name, file, { access: "public" });
-  return { url: blob.url };
+  const blob = await put(file.name, file, { access: "private" });
+  return { url: blob.downloadUrl };
 }
 
 export async function deleteVideo(url: string): Promise<void> {

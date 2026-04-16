@@ -44,7 +44,7 @@ describe("uploadVideo", () => {
     expect(put).toHaveBeenCalledOnce();
   });
 
-  it("passes access: 'public' option to put", async () => {
+  it("passes access: 'private' option to put", async () => {
     vi.mocked(put).mockResolvedValue({
       url: "https://blob.vercel-storage.com/video.mp4",
       pathname: "video.mp4",
@@ -58,7 +58,7 @@ describe("uploadVideo", () => {
     await uploadVideo(file);
 
     expect(put).toHaveBeenCalledWith(file.name, file, {
-      access: "public",
+      access: "private",
     });
   });
 
