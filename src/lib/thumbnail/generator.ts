@@ -22,6 +22,12 @@ export async function captureVideoFrame(
       video.currentTime = captureTime;
     };
 
+    const cleanup = () => {
+      URL.revokeObjectURL(objectUrl);
+      video.src = "";
+      video.load();
+    };
+
     video.onseeked = () => {
       try {
         const canvas = document.createElement("canvas");
@@ -30,6 +36,7 @@ export async function captureVideoFrame(
 
         const ctx = canvas.getContext("2d");
         if (!ctx) {
+          cleanup();
           reject(new Error("Failed to get canvas context"));
           return;
         }
@@ -38,7 +45,7 @@ export async function captureVideoFrame(
 
         canvas.toBlob(
           (blob) => {
-            URL.revokeObjectURL(objectUrl);
+            cleanup();
             if (blob) {
               resolve(blob);
             } else {
@@ -49,13 +56,13 @@ export async function captureVideoFrame(
           THUMBNAIL_QUALITY
         );
       } catch (err) {
-        URL.revokeObjectURL(objectUrl);
+        cleanup();
         reject(err);
       }
     };
 
     video.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
+      cleanup();
       reject(new Error("Failed to load video for thumbnail capture"));
     };
   });

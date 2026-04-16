@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 interface DeleteDialogProps {
   videoTitle: string;
@@ -10,6 +11,21 @@ interface DeleteDialogProps {
 
 export function DeleteDialog({ videoTitle, onConfirm, onCancel }: DeleteDialogProps) {
   const [deleting, setDeleting] = useState(false);
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  // Auto-focus cancel button (safe action) and trap Escape key
+  useEffect(() => {
+    cancelRef.current?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !deleting) {
+        onCancel();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onCancel, deleting]);
 
   const handleConfirm = async () => {
     setDeleting(true);
@@ -20,8 +36,15 @@ export function DeleteDialog({ videoTitle, onConfirm, onCancel }: DeleteDialogPr
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+  const dialog = (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-dialog-title"
+      aria-describedby="delete-dialog-desc"
+      onClick={(e) => e.preventDefault()}
+    >
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -37,7 +60,10 @@ export function DeleteDialog({ videoTitle, onConfirm, onCancel }: DeleteDialogPr
             </svg>
           </div>
           <div>
-            <h3 className="font-[family-name:var(--font-manrope)] font-bold text-[var(--on-surface)]">
+            <h3
+              id="delete-dialog-title"
+              className="font-[family-name:var(--font-manrope)] font-bold text-[var(--on-surface)]"
+            >
               Delete project
             </h3>
             <p className="text-sm text-[var(--on-surface-variant)]">
@@ -46,12 +72,13 @@ export function DeleteDialog({ videoTitle, onConfirm, onCancel }: DeleteDialogPr
           </div>
         </div>
 
-        <p className="text-sm text-[var(--on-surface-variant)] mb-6">
+        <p id="delete-dialog-desc" className="text-sm text-[var(--on-surface-variant)] mb-6">
           Are you sure you want to delete <strong className="text-[var(--on-surface)]">{videoTitle}</strong>? The video and all subtitles will be permanently removed.
         </p>
 
         <div className="flex gap-3 justify-end">
           <button
+            ref={cancelRef}
             onClick={onCancel}
             disabled={deleting}
             className="px-4 py-2 text-sm font-medium rounded-lg bg-[var(--surface-container-high)] text-[var(--on-surface)] hover:bg-[var(--surface-bright)] transition-colors disabled:opacity-50"
@@ -72,4 +99,6 @@ export function DeleteDialog({ videoTitle, onConfirm, onCancel }: DeleteDialogPr
       </div>
     </div>
   );
+
+  return createPortal(dialog, document.body);
 }

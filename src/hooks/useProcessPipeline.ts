@@ -66,9 +66,9 @@ export function useProcessPipeline(): PipelineResult {
       setProgress(100);
 
       // Generate and upload thumbnail (non-blocking, saves to DB via API)
-      captureVideoFrame(file).then((thumbBlob) =>
-        uploadThumbnail(thumbBlob, vid).catch(() => {})
-      );
+      captureVideoFrame(file)
+        .then((thumbBlob) => uploadThumbnail(thumbBlob, vid))
+        .catch((err) => console.warn("Thumbnail generation failed:", err));
 
       // Step 2: Submit transcription
       setStage("transcribing");
