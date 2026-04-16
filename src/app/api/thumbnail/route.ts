@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { put } from "@vercel/blob";
 import { updateVideo } from "@/lib/db/videos";
 
-const MAX_THUMBNAIL_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_THUMBNAIL_SIZE = 512 * 1024; // 512KB (data URL stored in DB)
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(request: Request) {
@@ -20,22 +19,22 @@ export async function POST(request: Request) {
     }
 
     if (file.size > MAX_THUMBNAIL_SIZE) {
-      return NextResponse.json({ error: "Thumbnail too large. Max 2MB." }, { status: 400 });
+      return NextResponse.json({ error: "Thumbnail too large. Max 512KB." }, { status: 400 });
     }
 
-    const blob = await put(file.name, file, {
-      access: "public",
-      addRandomSuffix: true,
-    });
+    // Convert to base64 data URL for direct use in <img src>
+    const buffer = await file.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString("base64");
+    const dataUrl = `data:${file.type};base64,${base64}`;
 
     if (typeof videoId === "string" && UUID_REGEX.test(videoId)) {
-      const updated = await updateVideo(videoId, { thumbnailUrl: blob.url });
+      const updated = await updateVideo(videoId, { thumbnailUrl: dataUrl });
       if (!updated) {
         console.warn(`Thumbnail uploaded but video ${videoId} not found in DB`);
       }
     }
 
-    return NextResponse.json({ url: blob.url });
+    return NextResponse.json({ url: dataUrl });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Thumbnail upload failed";
     return NextResponse.json({ error: message }, { status: 500 });
