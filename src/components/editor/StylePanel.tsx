@@ -1,159 +1,168 @@
 "use client";
 
+import { useState } from "react";
 import type { SubtitleStyle } from "@/lib/subtitle-style/types";
 import { FONT_SIZE_MIN, FONT_SIZE_MAX } from "@/lib/subtitle-style/types";
-import {
-  FONT_PRESETS,
-  TEXT_COLOR_PRESETS,
-  BG_COLOR_PRESETS,
-} from "@/lib/subtitle-style/presets";
+import { FONT_PRESETS } from "@/lib/subtitle-style/presets";
 
 interface StylePanelProps {
   style: SubtitleStyle;
   onUpdate: (partial: Partial<SubtitleStyle>) => void;
 }
 
+const WEIGHT_OPTIONS: { value: SubtitleStyle["fontWeight"]; label: string }[] = [
+  { value: "400", label: "Regular" },
+  { value: "500", label: "Medium" },
+  { value: "600", label: "Bold" },
+  { value: "700", label: "Extra Bold" },
+];
+
+const COLOR_PRESETS = [
+  { value: "#FFFFFF", className: "bg-white border border-[var(--outline-variant)]" },
+  { value: "#ADC6FF", className: "bg-[#ADC6FF]" },
+  { value: "#FFB786", className: "bg-[#FFB786]" },
+  { value: "#000000", className: "bg-black border border-[var(--outline-variant)]" },
+  { value: "#00000080", className: "bg-gradient-to-tr from-[var(--primary)] to-[var(--tertiary)]" },
+];
+
 export function StylePanel({ style, onUpdate }: StylePanelProps) {
+  const [fontOpen, setFontOpen] = useState(false);
+
   return (
     <div className="space-y-6">
-      {/* Font Family */}
-      <div>
-        <label className="block text-[10px] uppercase tracking-widest text-[var(--on-surface-variant)] mb-3 font-medium">
+      {/* Font Family — dropdown */}
+      <div className="space-y-2">
+        <label className="text-[10px] font-bold text-[var(--on-surface-variant)] uppercase tracking-wider">
           Font Family
         </label>
-        <div className="grid grid-cols-2 gap-2">
-          {FONT_PRESETS.map((preset) => (
-            <button
-              key={preset.name}
-              onClick={() => onUpdate({ fontFamily: preset.family })}
-              className={`px-3 py-2 rounded-lg text-sm transition-all duration-150 text-left ${
-                style.fontFamily === preset.family
-                  ? "bg-blue-500/15 text-blue-300 ring-1 ring-blue-400/40"
-                  : "bg-[var(--surface-container)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-high)]"
-              }`}
-              style={{ fontFamily: preset.family }}
+        <div className="relative">
+          <button
+            onClick={() => setFontOpen(!fontOpen)}
+            className="flex items-center justify-between w-full bg-[var(--surface-container)] rounded-lg p-3 cursor-pointer hover:bg-[var(--surface-container-high)] transition-colors"
+          >
+            <span className="text-sm font-bold font-headline" style={{ fontFamily: style.fontFamily }}>
+              {style.fontFamily}
+            </span>
+            <svg className={`w-4 h-4 text-[var(--on-surface-variant)] transition-transform ${fontOpen ? "rotate-180" : ""}`} viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z" />
+            </svg>
+          </button>
+          {fontOpen && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-[var(--surface-container-high)] rounded-lg border border-[var(--outline-variant)]/20 shadow-xl z-20 overflow-hidden">
+              {FONT_PRESETS.map((preset) => (
+                <button
+                  key={preset.name}
+                  onClick={() => {
+                    onUpdate({ fontFamily: preset.family });
+                    setFontOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                    style.fontFamily === preset.family
+                      ? "bg-[var(--primary)]/10 text-[var(--primary)]"
+                      : "text-[var(--on-surface)] hover:bg-[var(--surface-container-highest)]"
+                  }`}
+                  style={{ fontFamily: preset.family }}
+                >
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Size & Weight — Stitch layout */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label className="text-[10px] font-bold text-[var(--on-surface-variant)] uppercase tracking-wider">
+            Size
+          </label>
+          <div className="flex items-center bg-[var(--surface-container)] rounded-lg p-2">
+            <input
+              type="number"
+              min={FONT_SIZE_MIN}
+              max={FONT_SIZE_MAX}
+              value={style.fontSize}
+              onChange={(e) => {
+                const v = parseInt(e.target.value, 10);
+                if (!isNaN(v) && v >= FONT_SIZE_MIN && v <= FONT_SIZE_MAX) onUpdate({ fontSize: v });
+              }}
+              className="bg-transparent border-none w-full text-sm font-bold focus:ring-0 focus:outline-none text-[var(--on-surface)]"
+            />
+            <span className="text-[10px] text-slate-500 pr-1 shrink-0">PX</span>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <label className="text-[10px] font-bold text-[var(--on-surface-variant)] uppercase tracking-wider">
+            Weight
+          </label>
+          <div className="relative">
+            <select
+              value={style.fontWeight}
+              onChange={(e) => onUpdate({ fontWeight: e.target.value as SubtitleStyle["fontWeight"] })}
+              className="w-full bg-[var(--surface-container)] rounded-lg p-2 text-xs font-bold focus:ring-0 focus:outline-none appearance-none text-[var(--on-surface)] border-none cursor-pointer"
             >
-              {preset.name}
-            </button>
+              {WEIGHT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+            <svg className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--on-surface-variant)] pointer-events-none" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Colors — circular swatches */}
+      <div className="space-y-2">
+        <label className="text-[10px] font-bold text-[var(--on-surface-variant)] uppercase tracking-wider">
+          Colors
+        </label>
+        <div className="flex gap-2">
+          {COLOR_PRESETS.map((preset) => (
+            <button
+              key={preset.value}
+              onClick={() => onUpdate({ fontColor: preset.value.replace(/80$/, "") || "#FFFFFF", backgroundColor: preset.value })}
+              className={`w-8 h-8 rounded-full cursor-pointer transition-all ${preset.className} ${
+                style.fontColor === preset.value || style.backgroundColor === preset.value
+                  ? "ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--surface)]"
+                  : ""
+              }`}
+            />
           ))}
         </div>
       </div>
 
-      {/* Size & Weight */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-[10px] uppercase tracking-widest text-[var(--on-surface-variant)] mb-3 font-medium">
-            Size
-          </label>
-          <div className="flex items-center gap-3">
-            <input
-              type="range"
-              min={FONT_SIZE_MIN}
-              max={FONT_SIZE_MAX}
-              value={style.fontSize}
-              onChange={(e) => onUpdate({ fontSize: parseInt(e.target.value, 10) })}
-              className="flex-1 accent-blue-400 h-1 bg-[var(--surface-container-highest)] rounded-full appearance-none cursor-pointer"
-            />
-            <span className="text-sm text-[var(--on-surface)] font-medium w-8 text-right">
-              {style.fontSize}
-            </span>
-          </div>
-        </div>
-        <div>
-          <label className="block text-[10px] uppercase tracking-widest text-[var(--on-surface-variant)] mb-3 font-medium">
-            Weight
-          </label>
-          <div className="flex gap-1">
-            {(["400", "500", "600", "700"] as const).map((w) => (
-              <button
-                key={w}
-                onClick={() => onUpdate({ fontWeight: w })}
-                className={`flex-1 px-2 py-1.5 rounded text-xs transition-all ${
-                  style.fontWeight === w
-                    ? "bg-blue-500/15 text-blue-300 ring-1 ring-blue-400/40"
-                    : "bg-[var(--surface-container)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-high)]"
-                }`}
-                style={{ fontWeight: parseInt(w, 10) }}
-              >
-                {w === "400" ? "Regular" : w === "500" ? "Medium" : w === "600" ? "Semi" : "Bold"}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Colors */}
-      <div>
-        <label className="block text-[10px] uppercase tracking-widest text-[var(--on-surface-variant)] mb-3 font-medium">
-          Colors
-        </label>
-        <div className="grid grid-cols-2 gap-4">
-          {/* Text color */}
-          <div>
-            <span className="text-[10px] text-[var(--outline)] mb-2 block">Text</span>
-            <div className="flex gap-1.5 flex-wrap">
-              {TEXT_COLOR_PRESETS.map((color) => (
-                <button
-                  key={color}
-                  onClick={() => onUpdate({ fontColor: color })}
-                  className={`w-7 h-7 rounded-lg border-2 transition-all ${
-                    style.fontColor === color
-                      ? "border-blue-400 scale-110"
-                      : "border-transparent hover:border-[var(--outline-variant)]"
-                  }`}
-                  style={{ backgroundColor: color }}
-                  title={color}
-                />
-              ))}
-            </div>
-          </div>
-          {/* Background color */}
-          <div>
-            <span className="text-[10px] text-[var(--outline)] mb-2 block">Background</span>
-            <div className="flex gap-1.5 flex-wrap">
-              {BG_COLOR_PRESETS.map((color) => (
-                <button
-                  key={color}
-                  onClick={() => onUpdate({ backgroundColor: color })}
-                  className={`w-7 h-7 rounded-lg border-2 transition-all ${
-                    style.backgroundColor === color
-                      ? "border-blue-400 scale-110"
-                      : "border-transparent hover:border-[var(--outline-variant)]"
-                  } ${color === "transparent" ? "border-dashed border-[var(--outline-variant)] relative overflow-hidden" : ""}`}
-                  style={color !== "transparent" ? { backgroundColor: color } : undefined}
-                  title={color === "transparent" ? "None" : color}
-                >
-                  {color === "transparent" && (
-                    <span className="absolute inset-0 flex items-center justify-center text-[var(--outline)] text-xs">✕</span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Alignment / Position */}
-      <div>
-        <label className="block text-[10px] uppercase tracking-widest text-[var(--on-surface-variant)] mb-3 font-medium">
+      {/* Alignment — icon buttons */}
+      <div className="space-y-2">
+        <label className="text-[10px] font-bold text-[var(--on-surface-variant)] uppercase tracking-wider">
           Alignment
         </label>
-        <div className="flex gap-1">
+        <div className="flex bg-[var(--surface-container)] rounded-lg p-1">
           {(["top", "center", "bottom"] as const).map((pos) => (
             <button
               key={pos}
               onClick={() => onUpdate({ position: pos })}
-              className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium capitalize transition-all ${
+              className={`flex-1 py-1.5 flex justify-center transition-all rounded-md ${
                 style.position === pos
-                  ? "bg-blue-500/15 text-blue-300 ring-1 ring-blue-400/40"
-                  : "bg-[var(--surface-container)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-high)]"
+                  ? "text-[var(--on-surface)] bg-[var(--surface-container-highest)]"
+                  : "text-slate-500 hover:text-[var(--on-surface)]"
               }`}
             >
-              {pos === "top" ? "↑" : pos === "center" ? "↔" : "↓"} {pos}
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                {pos === "top" && <path d="M8 11h3v10h2V11h3l-4-4-4 4zM4 3v2h16V3H4z" />}
+                {pos === "center" && <path d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z" />}
+                {pos === "bottom" && <path d="M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z" />}
+              </svg>
             </button>
           ))}
         </div>
       </div>
+
+      {/* Apply to All Segments */}
+      <button className="w-full py-4 bg-[var(--surface-container-highest)] rounded-xl text-xs font-bold uppercase tracking-widest text-[var(--primary)] border border-[var(--primary)]/20 hover:bg-[var(--primary)]/5 transition-all">
+        Apply to All Segments
+      </button>
     </div>
   );
 }

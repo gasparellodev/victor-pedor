@@ -1,7 +1,10 @@
+"use client";
+
 import { TopNavbar } from "@/components/layout/TopNavbar";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { FontLoader } from "@/components/editor/FontLoader";
+import { SidebarProvider } from "@/contexts/SidebarContext";
 
 export default function AppLayout({
   children,
@@ -9,7 +12,7 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <SidebarProvider>
       <FontLoader />
       <TopNavbar />
       <div className="flex min-h-[calc(100vh-64px)]">
@@ -19,6 +22,6 @@ export default function AppLayout({
         </main>
       </div>
       <MobileBottomNav />
-    </>
+    </SidebarProvider>
   );
 }

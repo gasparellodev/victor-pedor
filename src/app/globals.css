@@ -139,6 +139,19 @@ body {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+/* Custom scrollbar (Stitch) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #0b0e15;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #424754;
+  border-radius: 10px;
+}
+
 /* Selection */
 ::selection {
   background: rgba(173, 198, 255, 0.3);
