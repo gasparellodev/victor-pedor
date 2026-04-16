@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
 import { correctSubtitles } from "@/lib/claude/client";
+import { updateVideo } from "@/lib/db/videos";
 
 const SubtitleSchema = z.object({
   index: z.number(),
@@ -10,6 +11,7 @@ const SubtitleSchema = z.object({
 
 const RequestSchema = z.object({
   subtitles: z.array(SubtitleSchema),
+  videoId: z.string().optional(),
 });
 
 export async function POST(request: Request) {
@@ -23,6 +25,7 @@ export async function POST(request: Request) {
     );
   }
 
+  const { videoId } = parsed.data;
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
@@ -38,10 +41,25 @@ export async function POST(request: Request) {
 
         const corrected = await correctSubtitles(parsed.data.subtitles);
 
+        if (videoId) {
+          await updateVideo(videoId, {
+            status: "ready",
+            subtitles: corrected,
+          });
+        }
+
         send("result", { subtitles: corrected });
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Correction failed";
+
+        if (videoId) {
+          await updateVideo(videoId, {
+            status: "error",
+            errorMessage: message,
+          });
+        }
+
         send("error", { message });
       } finally {
         controller.close();

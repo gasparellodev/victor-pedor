@@ -9,6 +9,7 @@ interface PipelineResult {
   progress: number;
   subtitles: Subtitle[];
   localVideoUrl: string | null;
+  videoId: string | null;
   error: string | null;
   start: (file: File) => Promise<void>;
   reset: () => void;
@@ -20,6 +21,7 @@ export function useProcessPipeline(): PipelineResult {
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
   const [localVideoUrl, setLocalVideoUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [videoId, setVideoId] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const reset = useCallback(() => {
@@ -29,6 +31,7 @@ export function useProcessPipeline(): PipelineResult {
     setProgress(0);
     setSubtitles([]);
     setLocalVideoUrl(null);
+    setVideoId(null);
     setError(null);
   }, [localVideoUrl]);
 
@@ -57,7 +60,8 @@ export function useProcessPipeline(): PipelineResult {
         throw new Error(data.error || "Upload failed");
       }
 
-      const { blobUrl: url } = await uploadRes.json();
+      const { blobUrl: url, videoId: vid } = await uploadRes.json();
+      setVideoId(vid);
       setProgress(100);
 
       // Step 2: Submit transcription
@@ -67,7 +71,7 @@ export function useProcessPipeline(): PipelineResult {
       const transcribeRes = await fetch("/api/transcribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ blobUrl: url }),
+        body: JSON.stringify({ blobUrl: url, videoId: vid }),
       });
 
       if (!transcribeRes.ok) {
@@ -85,7 +89,7 @@ export function useProcessPipeline(): PipelineResult {
         await new Promise((r) => setTimeout(r, 2000));
 
         const statusRes = await fetch(
-          `/api/transcription/${transcriptId}/status`
+          `/api/transcription/${transcriptId}/status${vid ? `?videoId=${vid}` : ""}`
         );
         const statusData = await statusRes.json();
 
@@ -110,7 +114,7 @@ export function useProcessPipeline(): PipelineResult {
       const correctRes = await fetch("/api/correct", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subtitles: rawSubtitles }),
+        body: JSON.stringify({ subtitles: rawSubtitles, videoId: vid }),
       });
 
       if (!correctRes.ok) {
@@ -162,5 +166,5 @@ export function useProcessPipeline(): PipelineResult {
     }
   }, []);
 
-  return { stage, progress, subtitles, localVideoUrl, error, start, reset };
+  return { stage, progress, subtitles, localVideoUrl, videoId, error, start, reset };
 }

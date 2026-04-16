@@ -3,9 +3,10 @@ import {
   checkTranscriptionStatus,
   wordsToSubtitles,
 } from "@/lib/assemblyai/client";
+import { updateVideo } from "@/lib/db/videos";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -20,7 +21,16 @@ export async function GET(
 
     const result = await checkTranscriptionStatus(id);
 
+    const { searchParams } = new URL(request.url);
+    const videoId = searchParams.get("videoId");
+
     if (result.status === "error") {
+      if (videoId) {
+        await updateVideo(videoId, {
+          status: "error",
+          errorMessage: result.error ?? "Transcription failed",
+        });
+      }
       return NextResponse.json(
         { status: "error", error: result.error },
         { status: 200 }
@@ -29,6 +39,14 @@ export async function GET(
 
     if (result.status === "completed" && result.words) {
       const subtitles = wordsToSubtitles(result.words);
+
+      if (videoId) {
+        await updateVideo(videoId, {
+          status: "correcting",
+          subtitles,
+        });
+      }
+
       return NextResponse.json({ status: "completed", subtitles });
     }
 
