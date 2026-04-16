@@ -96,16 +96,16 @@ export function UploadDropzone({ onFileSelect, disabled }: UploadDropzoneProps) 
           ${disabled ? "opacity-40 cursor-not-allowed" : ""}
           ${
             isDragOver
-              ? "border-[var(--accent)] bg-[var(--accent-subtle)]"
-              : "border-[var(--border-default)] hover:border-[var(--text-tertiary)] bg-[var(--bg-secondary)]"
+              ? "border-[var(--primary)] bg-[rgba(173,198,255,0.12)]"
+              : "border-[var(--outline-variant)] hover:border-[var(--outline)] bg-[var(--surface-container-low)]"
           }
         `}
       >
         <div className={`w-12 h-12 mb-5 rounded-xl flex items-center justify-center ${
-          isDragOver ? "bg-[var(--accent-subtle)]" : "bg-[var(--bg-tertiary)]"
+          isDragOver ? "bg-[rgba(173,198,255,0.12)]" : "bg-[var(--surface-container)]"
         }`}>
           <svg
-            className={`w-6 h-6 ${isDragOver ? "text-[var(--accent)]" : "text-[var(--text-tertiary)]"}`}
+            className={`w-6 h-6 ${isDragOver ? "text-[var(--primary)]" : "text-[var(--outline)]"}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -118,17 +118,17 @@ export function UploadDropzone({ onFileSelect, disabled }: UploadDropzoneProps) 
             />
           </svg>
         </div>
-        <p className="text-[15px] font-medium text-[var(--text-primary)]">
+        <p className="text-[15px] font-medium text-[var(--on-surface)]">
           Arraste o vídeo aqui ou clique para selecionar
         </p>
-        <p className="mt-2 text-[13px] text-[var(--text-tertiary)]">
+        <p className="mt-2 text-[13px] text-[var(--outline)]">
           MP4, WebM ou QuickTime (máx. 500MB)
         </p>
       </div>
 
       {error && (
-        <div className="mt-3 px-4 py-3 rounded-lg bg-[var(--danger-subtle)] border border-[var(--danger)]/20" role="alert">
-          <p className="text-[13px] text-[var(--danger)]">{error}</p>
+        <div className="mt-3 px-4 py-3 rounded-lg bg-[rgba(255,180,171,0.12)] border border-[var(--error)]/20" role="alert">
+          <p className="text-[13px] text-[var(--error)]">{error}</p>
         </div>
       )}
 

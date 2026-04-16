@@ -18,7 +18,7 @@ export function SubtitleEditor({
 }: SubtitleEditorProps) {
   if (subtitles.length === 0) {
     return (
-      <div className="flex items-center justify-center py-12 text-[var(--text-tertiary)]">
+      <div className="flex items-center justify-center py-12 text-[var(--outline)]">
         <p className="text-[14px]">Nenhuma legenda disponível.</p>
       </div>
     );

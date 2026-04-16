@@ -42,7 +42,33 @@ export const CreateVideoSchema = z.object({
 
 export type CreateVideoInput = z.infer<typeof CreateVideoSchema>;
 
+// Public schema — used by PATCH /api/videos/[id] (client-facing)
 export const UpdateVideoSchema = z.object({
+  subtitles: z
+    .array(
+      z.object({
+        index: z.number(),
+        startTime: z.number(),
+        endTime: z.number(),
+        text: z.string(),
+      })
+    )
+    .optional(),
+  subtitleStyle: z
+    .object({
+      fontFamily: z.string(),
+      fontSize: z.number(),
+      fontColor: z.string(),
+      backgroundColor: z.string(),
+      position: z.enum(["top", "center", "bottom"]),
+    })
+    .optional(),
+});
+
+export type UpdateVideoInput = z.infer<typeof UpdateVideoSchema>;
+
+// Internal schema — used by server-side code only (status transitions, etc.)
+export const InternalUpdateVideoSchema = z.object({
   status: z.enum(VIDEO_STATUSES).optional(),
   transcriptId: z.string().optional(),
   subtitles: z
@@ -65,11 +91,11 @@ export const UpdateVideoSchema = z.object({
     })
     .optional(),
   errorMessage: z.string().optional(),
-  thumbnailUrl: z.string().optional(),
+  thumbnailUrl: z.url().optional(),
   durationMs: z.number().int().positive().optional(),
 });
 
-export type UpdateVideoInput = z.infer<typeof UpdateVideoSchema>;
+export type InternalUpdateVideoInput = z.infer<typeof InternalUpdateVideoSchema>;
 
 export const CREATE_TABLE_SQL = `
 CREATE TABLE IF NOT EXISTS videos (

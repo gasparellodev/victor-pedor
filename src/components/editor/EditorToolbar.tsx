@@ -12,15 +12,15 @@ export function EditorToolbar({ dispatch, subtitleCount }: EditorToolbarProps) {
   const [shiftMs, setShiftMs] = useState(0);
 
   return (
-    <div className="flex items-center justify-between px-4 py-2.5 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-subtle)]">
+    <div className="flex items-center justify-between px-4 py-2.5 bg-[var(--surface-container-low)] rounded-lg border border-[var(--outline-variant)]">
       <div className="flex items-center gap-3">
-        <span className="text-[12px] text-[var(--text-tertiary)]">
+        <span className="text-[12px] text-[var(--outline)]">
           {subtitleCount} {subtitleCount === 1 ? "legenda" : "legendas"}
         </span>
       </div>
 
       <div className="flex items-center gap-2">
-        <label htmlFor="shift-input" className="text-[12px] text-[var(--text-secondary)]">
+        <label htmlFor="shift-input" className="text-[12px] text-[var(--on-surface-variant)]">
           Ajustar (ms)
         </label>
         <input
@@ -30,9 +30,9 @@ export function EditorToolbar({ dispatch, subtitleCount }: EditorToolbarProps) {
           onChange={(e) => setShiftMs(parseInt(e.target.value, 10) || 0)}
           className="
             w-20 px-2 py-1 text-[12px] font-mono rounded-md
-            bg-[var(--bg-primary)] border border-[var(--border-default)]
-            text-[var(--text-primary)]
-            focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]
+            bg-[var(--surface)] border border-[var(--outline-variant)]
+            text-[var(--on-surface)]
+            focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]
             transition-colors
           "
         />
@@ -41,9 +41,9 @@ export function EditorToolbar({ dispatch, subtitleCount }: EditorToolbarProps) {
           onClick={() => dispatch({ type: "SHIFT_ALL", offsetMs: shiftMs })}
           className="
             px-3 py-1 text-[12px] font-medium rounded-md
-            bg-[var(--bg-tertiary)] text-[var(--text-secondary)]
-            hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]
-            border border-[var(--border-default)]
+            bg-[var(--surface-container)] text-[var(--on-surface-variant)]
+            hover:bg-[var(--surface-container-high)] hover:text-[var(--on-surface)]
+            border border-[var(--outline-variant)]
             transition-colors duration-150
           "
         >

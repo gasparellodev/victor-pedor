@@ -13,7 +13,7 @@ export function VideoPlayer({ src, videoRef }: VideoPlayerProps) {
       ref={videoRef}
       src={src}
       controls
-      className="w-full rounded-xl border border-[var(--border-subtle)] bg-black"
+      className="w-full rounded-xl border border-[var(--outline-variant)] bg-black"
       preload="metadata"
     >
       <track kind="captions" />

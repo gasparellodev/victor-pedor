@@ -35,10 +35,10 @@ export function UploadProgress({ stage }: UploadProgressProps) {
                     transition-all duration-300
                     ${
                       isCompleted
-                        ? "bg-[var(--accent)] text-white"
+                        ? "bg-[var(--primary)] text-white"
                         : isActive
-                          ? "bg-[var(--accent-subtle)] text-[var(--accent)] ring-2 ring-[var(--accent)]/30"
-                          : "bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]"
+                          ? "bg-[rgba(173,198,255,0.12)] text-[var(--primary)] ring-2 ring-[var(--primary)]/30"
+                          : "bg-[var(--surface-container)] text-[var(--outline)]"
                     }
                   `}
                 >
@@ -52,7 +52,7 @@ export function UploadProgress({ stage }: UploadProgressProps) {
                 </div>
                 <span
                   className={`text-[12px] font-medium ${
-                    isActive ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)]"
+                    isActive ? "text-[var(--on-surface)]" : "text-[var(--outline)]"
                   }`}
                 >
                   {step.label}
@@ -63,9 +63,9 @@ export function UploadProgress({ stage }: UploadProgressProps) {
         </div>
 
         {/* Animated progress bar */}
-        <div className="w-full h-1 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
+        <div className="w-full h-1 bg-[var(--surface-container)] rounded-full overflow-hidden">
           <div
-            className="h-full bg-[var(--accent)] rounded-full transition-all duration-500"
+            className="h-full bg-[var(--primary)] rounded-full transition-all duration-500"
             style={{
               width: `${((currentIndex + 0.5) / STEPS.length) * 100}%`,
             }}
@@ -73,7 +73,7 @@ export function UploadProgress({ stage }: UploadProgressProps) {
         </div>
 
         {/* Status text */}
-        <p className="text-[13px] text-[var(--text-secondary)] animate-pulse-glow">
+        <p className="text-[13px] text-[var(--on-surface-variant)] animate-pulse-glow">
           {stage === "uploading" && "Enviando vídeo para processamento..."}
           {stage === "transcribing" && "Transcrevendo áudio com IA..."}
           {stage === "correcting" && "Corrigindo gramática portuguesa..."}

@@ -1,24 +1,22 @@
 "use client";
 
 import { useProcessPipeline } from "@/hooks/useProcessPipeline";
-import { useSubtitleState } from "@/hooks/useSubtitleState";
 import { UploadDropzone } from "@/components/upload/UploadDropzone";
 import { UploadProgress } from "@/components/upload/UploadProgress";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function NewVideoPage() {
-  const { stage, progress, subtitles: pipelineSubtitles, videoId, error, start, reset } = useProcessPipeline();
-  const [, dispatch] = useSubtitleState();
+  const { stage, progress, videoId, error, start, reset } = useProcessPipeline();
   const router = useRouter();
 
   // When editing stage is reached, redirect to the video editor
+  // Subtitles are already persisted to DB by the pipeline API routes
   useEffect(() => {
     if (stage === "editing" && videoId) {
-      dispatch({ type: "SET", subtitles: pipelineSubtitles });
       router.push(`/videos/${videoId}`);
     }
-  }, [stage, videoId, pipelineSubtitles, dispatch, router]);
+  }, [stage, videoId, router]);
 
   const handleFileSelect = async (file: File) => {
     await start(file);
@@ -44,7 +42,7 @@ export default function NewVideoPage() {
       )}
 
       {stage === "error" && (
-        <div className="bg-[var(--error)]/10 border border-[var(--error)]/20 rounded-xl p-8 text-center">
+        <div className="bg-[rgba(255,180,171,0.1)] border border-[rgba(255,180,171,0.2)] rounded-xl p-8 text-center">
           <svg className="w-12 h-12 text-[var(--error)] mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
           </svg>

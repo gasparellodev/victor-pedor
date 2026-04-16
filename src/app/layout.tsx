@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="pt-BR"
+      lang="en"
       className={`${inter.variable} ${manrope.variable} h-full antialiased dark`}
     >
       <body className="min-h-full bg-[var(--surface)] text-[var(--on-surface)] font-[family-name:var(--font-inter)]">

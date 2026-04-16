@@ -1,12 +1,12 @@
 import { getDb } from "./client";
 import {
   CreateVideoSchema,
-  UpdateVideoSchema,
+  InternalUpdateVideoSchema,
   CREATE_TABLE_SQL,
   mapRowToVideo,
   type Video,
   type CreateVideoInput,
-  type UpdateVideoInput,
+  type InternalUpdateVideoInput,
 } from "./schema";
 
 export async function initializeDatabase(): Promise<void> {
@@ -47,9 +47,9 @@ export async function getVideoById(id: string): Promise<Video | null> {
 
 export async function updateVideo(
   id: string,
-  data: UpdateVideoInput
+  data: InternalUpdateVideoInput
 ): Promise<Video | null> {
-  const parsed = UpdateVideoSchema.parse(data);
+  const parsed = InternalUpdateVideoSchema.parse(data);
   const sql = getDb();
 
   const setClauses: string[] = [];

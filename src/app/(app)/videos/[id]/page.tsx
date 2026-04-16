@@ -65,20 +65,36 @@ export default function VideoEditorPage() {
     URL.revokeObjectURL(url);
   }, [subtitles, video?.title]);
 
-  // Save subtitles to DB on changes (debounced)
+  // Save subtitles to DB on changes (debounced, skip initial load)
+  // Depend on video?.id (stable string) instead of video (new ref each render)
+  const hasLoadedRef = useRef(false);
+  const videoId = video?.id;
   useEffect(() => {
-    if (!video || subtitles.length === 0) return;
+    if (!videoId || subtitles.length === 0) return;
+
+    // Skip the first render (initial data from API)
+    if (!hasLoadedRef.current) {
+      hasLoadedRef.current = true;
+      return;
+    }
 
     const timer = setTimeout(async () => {
-      await fetch(`/api/videos/${video.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subtitles }),
-      });
+      try {
+        const res = await fetch(`/api/videos/${videoId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ subtitles }),
+        });
+        if (!res.ok) {
+          console.error("Failed to auto-save subtitles:", res.status);
+        }
+      } catch (err) {
+        console.error("Failed to auto-save subtitles:", err);
+      }
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [subtitles, video]);
+  }, [subtitles, videoId]);
 
   if (loading) {
     return (

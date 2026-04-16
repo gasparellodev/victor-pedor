@@ -40,20 +40,21 @@ export function VideoGrid({ videos }: VideoGridProps) {
       ))}
 
       {/* New project CTA card */}
-      <Link href="/videos/new">
-        <button className="w-full group bg-[var(--surface-container-lowest)] border-2 border-dashed border-[var(--outline-variant)]/30 rounded-xl overflow-hidden hover:border-[var(--primary)]/50 transition-all duration-300 flex flex-col items-center justify-center min-h-[280px]">
-          <div className="w-12 h-12 rounded-full bg-[var(--surface-container-high)] flex items-center justify-center text-[var(--outline)] group-hover:bg-[var(--primary-container)] group-hover:text-[var(--on-primary-container)] transition-all duration-300 mb-4">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-          </div>
-          <h3 className="font-[family-name:var(--font-manrope)] font-bold text-[var(--on-surface-variant)] group-hover:text-[var(--primary)] transition-colors">
-            Start New Video
-          </h3>
-          <p className="text-[10px] uppercase tracking-widest text-[var(--outline)] mt-1">
-            Upload mp4, mov, or webm
-          </p>
-        </button>
+      <Link
+        href="/videos/new"
+        className="group bg-[var(--surface-container-lowest)] border-2 border-dashed border-[var(--outline-variant)]/30 rounded-xl overflow-hidden hover:border-[var(--primary)]/50 transition-all duration-300 flex flex-col items-center justify-center min-h-[280px]"
+      >
+        <div className="w-12 h-12 rounded-full bg-[var(--surface-container-high)] flex items-center justify-center text-[var(--outline)] group-hover:bg-[var(--primary-container)] group-hover:text-[var(--on-primary-container)] transition-all duration-300 mb-4">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <h3 className="font-[family-name:var(--font-manrope)] font-bold text-[var(--on-surface-variant)] group-hover:text-[var(--primary)] transition-colors">
+          Start New Video
+        </h3>
+        <p className="text-[10px] uppercase tracking-widest text-[var(--outline)] mt-1">
+          Upload mp4, mov, or webm
+        </p>
       </Link>
     </div>
   );
