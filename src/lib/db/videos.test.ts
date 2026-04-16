@@ -61,6 +61,7 @@ describe("mapRowToVideo", () => {
     const subtitleStyle = {
       fontFamily: "Inter",
       fontSize: 24,
+      fontWeight: "700" as const,
       fontColor: "#ffffff",
       backgroundColor: "#00000080",
       position: "bottom" as const,
@@ -285,6 +286,7 @@ describe("updateVideo", () => {
     const subtitleStyle = {
       fontFamily: "Inter",
       fontSize: 24,
+      fontWeight: "700" as const,
       fontColor: "#ffffff",
       backgroundColor: "#00000080",
       position: "bottom" as const,

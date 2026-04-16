@@ -1,5 +1,7 @@
 import { z } from "zod/v4";
 import type { Subtitle } from "@/types/subtitle";
+import { SubtitleStyleSchema, type SubtitleStyle } from "@/lib/subtitle-style/types";
+export type { SubtitleStyle };
 
 export const VIDEO_STATUSES = [
   "uploading",
@@ -10,14 +12,6 @@ export const VIDEO_STATUSES = [
 ] as const;
 
 export type VideoStatus = (typeof VIDEO_STATUSES)[number];
-
-export interface SubtitleStyle {
-  fontFamily: string;
-  fontSize: number;
-  fontColor: string;
-  backgroundColor: string;
-  position: "top" | "center" | "bottom";
-}
 
 export interface Video {
   id: string;
@@ -54,15 +48,7 @@ export const UpdateVideoSchema = z.object({
       })
     )
     .optional(),
-  subtitleStyle: z
-    .object({
-      fontFamily: z.string(),
-      fontSize: z.number(),
-      fontColor: z.string(),
-      backgroundColor: z.string(),
-      position: z.enum(["top", "center", "bottom"]),
-    })
-    .optional(),
+  subtitleStyle: SubtitleStyleSchema.optional(),
 });
 
 export type UpdateVideoInput = z.infer<typeof UpdateVideoSchema>;
@@ -81,15 +67,7 @@ export const InternalUpdateVideoSchema = z.object({
       })
     )
     .optional(),
-  subtitleStyle: z
-    .object({
-      fontFamily: z.string(),
-      fontSize: z.number(),
-      fontColor: z.string(),
-      backgroundColor: z.string(),
-      position: z.enum(["top", "center", "bottom"]),
-    })
-    .optional(),
+  subtitleStyle: SubtitleStyleSchema.optional(),
   errorMessage: z.string().optional(),
   thumbnailUrl: z.url().optional(),
   durationMs: z.number().int().positive().optional(),

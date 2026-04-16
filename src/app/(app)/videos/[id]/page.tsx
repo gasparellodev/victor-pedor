@@ -6,10 +6,14 @@ import Link from "next/link";
 import { VideoPlayer } from "@/components/preview/VideoPlayer";
 import { SubtitleOverlay } from "@/components/preview/SubtitleOverlay";
 import { SubtitleEditor } from "@/components/editor/SubtitleEditor";
+import { StylePanel } from "@/components/editor/StylePanel";
 import { useVideoSync } from "@/hooks/useVideoSync";
 import { useSubtitleState } from "@/hooks/useSubtitleState";
+import { useSubtitleStyle } from "@/hooks/useSubtitleStyle";
 import { generateSrt } from "@/lib/srt/generator";
 import type { Video } from "@/lib/db/schema";
+
+type EditorTab = "text" | "style";
 
 export default function VideoEditorPage() {
   const params = useParams<{ id: string }>();
@@ -20,6 +24,7 @@ export default function VideoEditorPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [localVideoUrl, setLocalVideoUrl] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<EditorTab>("text");
 
   // Fetch video data from DB
   useEffect(() => {
@@ -36,7 +41,10 @@ export default function VideoEditorPage() {
           dispatch({ type: "SET", subtitles: data.video.subtitles });
         }
 
-        // Fetch video blob for playback
+        if (data.video.subtitleStyle) {
+          setSubtitleStyle(data.video.subtitleStyle);
+        }
+
         if (data.video.blobUrl) {
           setLocalVideoUrl(data.video.blobUrl);
         }
@@ -48,7 +56,9 @@ export default function VideoEditorPage() {
     }
 
     fetchVideo();
-  }, [params.id, dispatch]);
+  }, [params.id, dispatch, setSubtitleStyle]);
+
+  const { style: subtitleStyle, updateStyle, setStyle: setSubtitleStyle } = useSubtitleStyle(video?.id);
 
   const activeSubtitle = subtitles.find(
     (s) => currentTime >= s.startTime && currentTime <= s.endTime
@@ -66,13 +76,11 @@ export default function VideoEditorPage() {
   }, [subtitles, video?.title]);
 
   // Save subtitles to DB on changes (debounced, skip initial load)
-  // Depend on video?.id (stable string) instead of video (new ref each render)
   const hasLoadedRef = useRef(false);
   const videoId = video?.id;
   useEffect(() => {
     if (!videoId || subtitles.length === 0) return;
 
-    // Skip the first render (initial data from API)
     if (!hasLoadedRef.current) {
       hasLoadedRef.current = true;
       return;
@@ -149,7 +157,7 @@ export default function VideoEditorPage() {
           {localVideoUrl && (
             <div className="relative rounded-xl overflow-hidden bg-black">
               <VideoPlayer src={localVideoUrl} videoRef={videoRef} />
-              <SubtitleOverlay subtitles={subtitles} currentTime={currentTime} />
+              <SubtitleOverlay subtitles={subtitles} currentTime={currentTime} style={subtitleStyle} />
             </div>
           )}
           {!localVideoUrl && (
@@ -159,14 +167,45 @@ export default function VideoEditorPage() {
           )}
         </div>
 
-        {/* Right: Editor */}
+        {/* Right: Editor with Tabs */}
         {subtitles.length > 0 && (
           <div>
-            <SubtitleEditor
-              subtitles={subtitles}
-              dispatch={dispatch}
-              activeIndex={activeSubtitle?.index}
-            />
+            {/* Tab switcher */}
+            <div className="flex gap-1 mb-4 bg-[var(--surface-container-low)] rounded-lg p-1">
+              <button
+                onClick={() => setActiveTab("text")}
+                className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  activeTab === "text"
+                    ? "bg-[var(--surface-container-high)] text-[var(--on-surface)] shadow-sm"
+                    : "text-[var(--on-surface-variant)] hover:text-[var(--on-surface)]"
+                }`}
+              >
+                Edit Text
+              </button>
+              <button
+                onClick={() => setActiveTab("style")}
+                className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  activeTab === "style"
+                    ? "bg-[var(--surface-container-high)] text-[var(--on-surface)] shadow-sm"
+                    : "text-[var(--on-surface-variant)] hover:text-[var(--on-surface)]"
+                }`}
+              >
+                Style
+              </button>
+            </div>
+
+            {/* Tab content */}
+            {activeTab === "text" ? (
+              <SubtitleEditor
+                subtitles={subtitles}
+                dispatch={dispatch}
+                activeIndex={activeSubtitle?.index}
+              />
+            ) : (
+              <div className="bg-[var(--surface-container-low)] rounded-xl p-5 border border-[var(--outline-variant)]/10">
+                <StylePanel style={subtitleStyle} onUpdate={updateStyle} />
+              </div>
+            )}
           </div>
         )}
 

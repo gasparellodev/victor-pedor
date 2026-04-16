@@ -1,6 +1,7 @@
 import { TopNavbar } from "@/components/layout/TopNavbar";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { FontLoader } from "@/components/editor/FontLoader";
 
 export default function AppLayout({
   children,
@@ -9,6 +10,7 @@ export default function AppLayout({
 }>) {
   return (
     <>
+      <FontLoader />
       <TopNavbar />
       <div className="flex min-h-[calc(100vh-64px)]">
         <Sidebar />
