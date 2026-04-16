@@ -7,78 +7,78 @@ interface UploadProgressProps {
   progress: number;
 }
 
-const STAGE_LABELS: Record<PipelineStage, string> = {
-  idle: "Aguardando",
-  uploading: "Enviando vídeo...",
-  transcribing: "Transcrevendo áudio...",
-  correcting: "Corrigindo gramática...",
-  editing: "Pronto para edição",
-  done: "Concluído",
-  error: "Erro",
-};
-
-const STAGE_ORDER: PipelineStage[] = [
-  "uploading",
-  "transcribing",
-  "correcting",
+const STEPS: { key: PipelineStage; label: string; icon: string }[] = [
+  { key: "uploading", label: "Enviando", icon: "1" },
+  { key: "transcribing", label: "Transcrevendo", icon: "2" },
+  { key: "correcting", label: "Corrigindo", icon: "3" },
 ];
 
-export function UploadProgress({ stage, progress }: UploadProgressProps) {
+export function UploadProgress({ stage }: UploadProgressProps) {
   if (stage === "idle") return null;
 
-  const currentIndex = STAGE_ORDER.indexOf(stage);
-  const label = STAGE_LABELS[stage];
+  const currentIndex = STEPS.findIndex((s) => s.key === stage);
 
   return (
-    <div className="w-full mt-6">
-      <div className="flex justify-between mb-2">
-        {STAGE_ORDER.map((s, i) => {
-          const isActive = s === stage;
-          const isCompleted = currentIndex > i || stage === "editing" || stage === "done";
+    <div className="animate-fade-in w-full max-w-md mx-auto">
+      <div className="flex flex-col items-center gap-8">
+        {/* Steps */}
+        <div className="flex items-center gap-3 w-full">
+          {STEPS.map((step, i) => {
+            const isActive = step.key === stage;
+            const isCompleted = currentIndex > i;
 
-          return (
-            <div key={s} className="flex items-center gap-2">
-              <div
-                className={`w-3 h-3 rounded-full ${
-                  isCompleted
-                    ? "bg-green-500"
-                    : isActive
-                      ? "bg-blue-500 animate-pulse"
-                      : "bg-gray-300"
-                }`}
-              />
-              <span
-                className={`text-xs ${
-                  isActive ? "text-blue-700 font-medium" : "text-gray-500"
-                }`}
-              >
-                {STAGE_LABELS[s]}
-              </span>
-            </div>
-          );
-        })}
-      </div>
+            return (
+              <div key={step.key} className="flex-1 flex flex-col items-center gap-2">
+                <div
+                  className={`
+                    w-8 h-8 rounded-full flex items-center justify-center text-[13px] font-medium
+                    transition-all duration-300
+                    ${
+                      isCompleted
+                        ? "bg-[var(--accent)] text-white"
+                        : isActive
+                          ? "bg-[var(--accent-subtle)] text-[var(--accent)] ring-2 ring-[var(--accent)]/30"
+                          : "bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]"
+                    }
+                  `}
+                >
+                  {isCompleted ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    step.icon
+                  )}
+                </div>
+                <span
+                  className={`text-[12px] font-medium ${
+                    isActive ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)]"
+                  }`}
+                >
+                  {step.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
 
-      {stage !== "error" && stage !== "editing" && stage !== "done" && (
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        {/* Animated progress bar */}
+        <div className="w-full h-1 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
           <div
-            className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%` }}
-            role="progressbar"
-            aria-valuenow={progress}
-            aria-valuemin={0}
-            aria-valuemax={100}
+            className="h-full bg-[var(--accent)] rounded-full transition-all duration-500"
+            style={{
+              width: `${((currentIndex + 0.5) / STEPS.length) * 100}%`,
+            }}
           />
         </div>
-      )}
 
-      <p className="mt-2 text-sm text-center text-gray-600">{label}</p>
-
-      {stage === "error" && (
-        <p className="mt-2 text-sm text-center text-red-600">
-          Ocorreu um erro. Tente novamente.
+        {/* Status text */}
+        <p className="text-[13px] text-[var(--text-secondary)] animate-pulse-glow">
+          {stage === "uploading" && "Enviando vídeo para processamento..."}
+          {stage === "transcribing" && "Transcrevendo áudio com IA..."}
+          {stage === "correcting" && "Corrigindo gramática portuguesa..."}
         </p>
-      )}
+      </div>
     </div>
   );
 }

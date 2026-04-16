@@ -47,6 +47,6 @@ describe("UploadDropzone", () => {
     render(<UploadDropzone onFileSelect={vi.fn()} disabled />);
 
     const button = screen.getByRole("button");
-    expect(button.className).toContain("opacity-50");
+    expect(button.className).toContain("opacity-40");
   });
 });

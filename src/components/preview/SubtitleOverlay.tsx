@@ -4,7 +4,7 @@ import type { Subtitle } from "@/types/subtitle";
 
 interface SubtitleOverlayProps {
   subtitles: Subtitle[];
-  currentTime: number; // milliseconds
+  currentTime: number;
 }
 
 export function SubtitleOverlay({ subtitles, currentTime }: SubtitleOverlayProps) {
@@ -15,8 +15,8 @@ export function SubtitleOverlay({ subtitles, currentTime }: SubtitleOverlayProps
   if (!active) return null;
 
   return (
-    <div className="absolute bottom-8 left-0 right-0 flex justify-center pointer-events-none">
-      <span className="bg-black/75 text-white px-4 py-2 rounded-lg text-lg font-medium max-w-[80%] text-center whitespace-pre-line">
+    <div className="absolute bottom-12 left-0 right-0 flex justify-center pointer-events-none px-4">
+      <span className="bg-black/80 backdrop-blur-sm text-white px-5 py-2.5 rounded-lg text-[15px] font-medium max-w-[85%] text-center whitespace-pre-line leading-relaxed shadow-lg">
         {active.text}
       </span>
     </div>

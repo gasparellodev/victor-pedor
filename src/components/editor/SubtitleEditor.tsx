@@ -18,17 +18,17 @@ export function SubtitleEditor({
 }: SubtitleEditorProps) {
   if (subtitles.length === 0) {
     return (
-      <p className="text-center text-gray-500 py-8">
-        Nenhuma legenda disponível.
-      </p>
+      <div className="flex items-center justify-center py-12 text-[var(--text-tertiary)]">
+        <p className="text-[14px]">Nenhuma legenda disponível.</p>
+      </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <EditorToolbar dispatch={dispatch} />
+    <div className="flex flex-col gap-3 animate-fade-in">
+      <EditorToolbar dispatch={dispatch} subtitleCount={subtitles.length} />
 
-      <div className="flex flex-col gap-2 max-h-[500px] overflow-y-auto">
+      <div className="flex flex-col gap-2 max-h-[480px] overflow-y-auto pr-1">
         {subtitles.map((sub) => (
           <SubtitleRow
             key={sub.index}

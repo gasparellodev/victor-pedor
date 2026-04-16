@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 interface TimestampInputProps {
-  value: number; // milliseconds
+  value: number;
   onChange: (ms: number) => void;
   label: string;
 }
@@ -59,9 +59,17 @@ export function TimestampInput({ value, onChange, label }: TimestampInputProps) 
       onChange={(e) => setText(e.target.value)}
       onBlur={handleBlur}
       aria-label={label}
-      className={`w-32 px-2 py-1 text-sm font-mono border rounded ${
-        error ? "border-red-500 bg-red-50" : "border-gray-300"
-      }`}
+      className={`
+        w-[120px] px-2.5 py-1.5 text-[12px] font-mono rounded-md
+        bg-[var(--bg-primary)] border transition-colors duration-150
+        focus:outline-none focus:ring-1
+        ${
+          error
+            ? "border-[var(--danger)] focus:ring-[var(--danger)]"
+            : "border-[var(--border-default)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"
+        }
+        text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]
+      `}
       placeholder="00:00:00,000"
     />
   );

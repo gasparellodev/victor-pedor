@@ -8,7 +8,7 @@ interface PipelineResult {
   stage: PipelineStage;
   progress: number;
   subtitles: Subtitle[];
-  blobUrl: string | null;
+  localVideoUrl: string | null;
   error: string | null;
   start: (file: File) => Promise<void>;
   reset: () => void;
@@ -18,22 +18,27 @@ export function useProcessPipeline(): PipelineResult {
   const [stage, setStage] = useState<PipelineStage>("idle");
   const [progress, setProgress] = useState(0);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([]);
-  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const [localVideoUrl, setLocalVideoUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const reset = useCallback(() => {
     abortRef.current?.abort();
+    if (localVideoUrl) URL.revokeObjectURL(localVideoUrl);
     setStage("idle");
     setProgress(0);
     setSubtitles([]);
-    setBlobUrl(null);
+    setLocalVideoUrl(null);
     setError(null);
-  }, []);
+  }, [localVideoUrl]);
 
   const start = useCallback(async (file: File) => {
     try {
       setError(null);
+
+      // Create local video URL for preview (private blob URLs don't work as video src)
+      const objectUrl = URL.createObjectURL(file);
+      setLocalVideoUrl(objectUrl);
 
       // Step 1: Upload
       setStage("uploading");
@@ -53,7 +58,6 @@ export function useProcessPipeline(): PipelineResult {
       }
 
       const { blobUrl: url } = await uploadRes.json();
-      setBlobUrl(url);
       setProgress(100);
 
       // Step 2: Submit transcription
@@ -158,5 +162,5 @@ export function useProcessPipeline(): PipelineResult {
     }
   }, []);
 
-  return { stage, progress, subtitles, blobUrl, error, start, reset };
+  return { stage, progress, subtitles, localVideoUrl, error, start, reset };
 }
