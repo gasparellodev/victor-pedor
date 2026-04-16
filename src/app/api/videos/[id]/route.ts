@@ -4,12 +4,23 @@ import { getVideoById, updateVideo, deleteVideo } from "@/lib/db/videos";
 import { UpdateVideoSchema } from "@/lib/db/schema";
 import { deleteVideo as deleteBlobVideo } from "@/lib/blob/client";
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function isValidUUID(id: string): boolean {
+  return UUID_REGEX.test(id);
+}
+
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
+
+    if (!isValidUUID(id)) {
+      return NextResponse.json({ error: "Invalid video ID format" }, { status: 400 });
+    }
+
     const video = await getVideoById(id);
 
     if (!video) {
@@ -29,6 +40,11 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
+
+    if (!isValidUUID(id)) {
+      return NextResponse.json({ error: "Invalid video ID format" }, { status: 400 });
+    }
+
     const body = await request.json();
 
     const parsed = UpdateVideoSchema.safeParse(body);
@@ -58,6 +74,10 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    if (!isValidUUID(id)) {
+      return NextResponse.json({ error: "Invalid video ID format" }, { status: 400 });
+    }
 
     const video = await getVideoById(id);
     if (!video) {

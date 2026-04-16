@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
 import { initializeDatabase } from "@/lib/db/videos";
 
-export async function POST() {
+export async function POST(request: Request) {
+  const authHeader = request.headers.get("authorization");
+  const expectedToken = process.env.DB_INIT_SECRET;
+
+  if (!expectedToken || authHeader !== `Bearer ${expectedToken}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     await initializeDatabase();
     return NextResponse.json({ success: true, message: "Database initialized" });
