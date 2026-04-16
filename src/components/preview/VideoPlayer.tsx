@@ -13,11 +13,10 @@ export function VideoPlayer({ src, videoRef }: VideoPlayerProps) {
       ref={videoRef}
       src={src}
       controls
-      className="w-full rounded-lg"
+      className="w-full rounded-xl border border-[var(--border-subtle)] bg-black"
       preload="metadata"
     >
       <track kind="captions" />
-      Seu navegador não suporta vídeo.
     </video>
   );
 }

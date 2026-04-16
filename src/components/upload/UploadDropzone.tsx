@@ -77,7 +77,7 @@ export function UploadDropzone({ onFileSelect, disabled }: UploadDropzoneProps) 
   );
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <div
         role="button"
         tabIndex={0}
@@ -90,38 +90,46 @@ export function UploadDropzone({ onFileSelect, disabled }: UploadDropzoneProps) 
         }}
         className={`
           flex flex-col items-center justify-center
-          w-full min-h-[200px] p-8
-          border-2 border-dashed rounded-xl
-          cursor-pointer transition-colors
-          ${disabled ? "opacity-50 cursor-not-allowed border-gray-300 bg-gray-50" : ""}
-          ${isDragOver ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:border-gray-400"}
+          w-full min-h-[240px] p-10
+          border border-dashed rounded-xl
+          cursor-pointer transition-all duration-200
+          ${disabled ? "opacity-40 cursor-not-allowed" : ""}
+          ${
+            isDragOver
+              ? "border-[var(--accent)] bg-[var(--accent-subtle)]"
+              : "border-[var(--border-default)] hover:border-[var(--text-tertiary)] bg-[var(--bg-secondary)]"
+          }
         `}
       >
-        <svg
-          className="w-12 h-12 mb-4 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-          />
-        </svg>
-        <p className="text-lg font-medium text-gray-700">
+        <div className={`w-12 h-12 mb-5 rounded-xl flex items-center justify-center ${
+          isDragOver ? "bg-[var(--accent-subtle)]" : "bg-[var(--bg-tertiary)]"
+        }`}>
+          <svg
+            className={`w-6 h-6 ${isDragOver ? "text-[var(--accent)]" : "text-[var(--text-tertiary)]"}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+            />
+          </svg>
+        </div>
+        <p className="text-[15px] font-medium text-[var(--text-primary)]">
           Arraste o vídeo aqui ou clique para selecionar
         </p>
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-[13px] text-[var(--text-tertiary)]">
           MP4, WebM ou QuickTime (máx. 500MB)
         </p>
       </div>
 
       {error && (
-        <p className="mt-3 text-sm text-red-600" role="alert">
-          {error}
-        </p>
+        <div className="mt-3 px-4 py-3 rounded-lg bg-[var(--danger-subtle)] border border-[var(--danger)]/20" role="alert">
+          <p className="text-[13px] text-[var(--danger)]">{error}</p>
+        </div>
       )}
 
       <input

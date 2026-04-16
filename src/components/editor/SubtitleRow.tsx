@@ -13,15 +13,22 @@ interface SubtitleRowProps {
 export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) {
   return (
     <div
-      className={`flex items-start gap-3 p-3 rounded-lg border transition-colors ${
-        isActive ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-gray-300"
-      }`}
+      className={`
+        group flex items-start gap-3 p-3 rounded-lg border transition-all duration-150
+        ${
+          isActive
+            ? "border-[var(--accent)] bg-[var(--accent-subtle)]"
+            : "border-[var(--border-subtle)] hover:border-[var(--border-default)] bg-[var(--bg-secondary)]"
+        }
+      `}
     >
-      <span className="text-sm font-mono text-gray-400 mt-2 w-6 text-right shrink-0">
+      {/* Index */}
+      <span className="text-[12px] font-mono text-[var(--text-tertiary)] mt-2 w-5 text-right shrink-0">
         {subtitle.index}
       </span>
 
-      <div className="flex flex-col gap-2 shrink-0">
+      {/* Timestamps */}
+      <div className="flex flex-col gap-1.5 shrink-0">
         <TimestampInput
           value={subtitle.startTime}
           onChange={(startTime) =>
@@ -38,6 +45,7 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
         />
       </div>
 
+      {/* Text */}
       <textarea
         value={subtitle.text}
         onChange={(e) =>
@@ -47,26 +55,31 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
             text: e.target.value,
           })
         }
-        className="flex-1 px-3 py-2 border border-gray-300 rounded resize-none text-sm min-h-[60px]"
+        className="
+          flex-1 px-3 py-2 rounded-md text-[13px] leading-relaxed resize-none min-h-[52px]
+          bg-[var(--bg-primary)] border border-[var(--border-default)]
+          text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]
+          focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]
+          transition-colors duration-150
+        "
         aria-label={`Texto da legenda ${subtitle.index}`}
         rows={2}
       />
 
-      <div className="flex flex-col gap-1 shrink-0">
+      {/* Actions */}
+      <div className="flex flex-col gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
         <button
           type="button"
           onClick={() => dispatch({ type: "DELETE", index: subtitle.index })}
-          className="text-xs px-2 py-1 text-red-600 hover:bg-red-50 rounded"
+          className="text-[11px] px-2 py-1 rounded text-[var(--danger)] hover:bg-[var(--danger-subtle)] transition-colors"
           title="Excluir legenda"
         >
           Excluir
         </button>
         <button
           type="button"
-          onClick={() =>
-            dispatch({ type: "INSERT", afterIndex: subtitle.index })
-          }
-          className="text-xs px-2 py-1 text-blue-600 hover:bg-blue-50 rounded"
+          onClick={() => dispatch({ type: "INSERT", afterIndex: subtitle.index })}
+          className="text-[11px] px-2 py-1 rounded text-[var(--accent)] hover:bg-[var(--accent-subtle)] transition-colors"
           title="Inserir legenda após"
         >
           Inserir
@@ -74,7 +87,7 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
         <button
           type="button"
           onClick={() => dispatch({ type: "MERGE", index: subtitle.index })}
-          className="text-xs px-2 py-1 text-gray-600 hover:bg-gray-50 rounded"
+          className="text-[11px] px-2 py-1 rounded text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors"
           title="Mesclar com próxima"
         >
           Mesclar
@@ -88,7 +101,7 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
               splitAt: Math.ceil(subtitle.text.split(" ").length / 2),
             })
           }
-          className="text-xs px-2 py-1 text-gray-600 hover:bg-gray-50 rounded"
+          className="text-[11px] px-2 py-1 rounded text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors"
           title="Dividir legenda"
         >
           Dividir
