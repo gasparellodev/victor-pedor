@@ -21,7 +21,7 @@ export async function uploadVideo(file: File): Promise<{ url: string }> {
     );
   }
 
-  const blob = await put(file.name, file, { access: "private" });
+  const blob = await put(file.name, file, { access: "private", addRandomSuffix: true });
   return { url: blob.downloadUrl };
 }
 

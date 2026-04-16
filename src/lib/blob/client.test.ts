@@ -59,6 +59,7 @@ describe("uploadVideo", () => {
 
     expect(put).toHaveBeenCalledWith(file.name, file, {
       access: "private",
+      addRandomSuffix: true,
     });
   });
 
