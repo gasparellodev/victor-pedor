@@ -8,6 +8,7 @@ import type { TranscribedWord } from "./client";
 
 const mockTranscribe = vi.fn();
 const mockGet = vi.fn();
+const mockUpload = vi.fn();
 
 vi.mock("assemblyai", () => {
   return {
@@ -15,6 +16,9 @@ vi.mock("assemblyai", () => {
       transcripts = {
         transcribe: mockTranscribe,
         get: mockGet,
+      };
+      files = {
+        upload: mockUpload,
       };
     },
   };
@@ -25,25 +29,51 @@ describe("submitTranscription", () => {
     vi.clearAllMocks();
   });
 
-  it("submits audio URL and returns transcript ID", async () => {
+  it("fetches video, uploads to AssemblyAI, and returns transcript ID", async () => {
+    const mockBuffer = new ArrayBuffer(8);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
+      ok: true,
+      arrayBuffer: () => Promise.resolve(mockBuffer),
+    }));
+    mockUpload.mockResolvedValue("https://cdn.assemblyai.com/upload/abc123");
     mockTranscribe.mockResolvedValue({ id: "transcript_123", status: "queued" });
 
     const result = await submitTranscription("https://blob.vercel.com/video.mp4");
 
     expect(result).toBe("transcript_123");
+    expect(mockUpload).toHaveBeenCalledOnce();
     expect(mockTranscribe).toHaveBeenCalledWith({
-      audio_url: "https://blob.vercel.com/video.mp4",
+      audio_url: "https://cdn.assemblyai.com/upload/abc123",
       language_code: "pt",
       speech_models: ["universal-3-pro"],
     });
+
+    vi.unstubAllGlobals();
+  });
+
+  it("throws when video fetch fails", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
+
+    await expect(
+      submitTranscription("https://blob.vercel.com/video.mp4")
+    ).rejects.toThrow("Failed to fetch video from storage: 404");
+
+    vi.unstubAllGlobals();
   });
 
   it("throws on API error", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
+      ok: true,
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
+    }));
+    mockUpload.mockResolvedValue("https://cdn.assemblyai.com/upload/abc");
     mockTranscribe.mockRejectedValue(new Error("API Error"));
 
     await expect(
       submitTranscription("https://blob.vercel.com/video.mp4")
     ).rejects.toThrow("API Error");
+
+    vi.unstubAllGlobals();
   });
 });
 

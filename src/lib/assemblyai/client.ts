@@ -24,8 +24,18 @@ function getClient(): AssemblyAI {
 
 export async function submitTranscription(audioUrl: string): Promise<string> {
   const client = getClient();
+
+  // Fetch video from private Blob store and upload directly to AssemblyAI
+  const response = await fetch(audioUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch video from storage: ${response.status}`);
+  }
+  const buffer = await response.arrayBuffer();
+
+  const uploadUrl = await client.files.upload(Buffer.from(buffer));
+
   const transcript = await client.transcripts.transcribe({
-    audio_url: audioUrl,
+    audio_url: uploadUrl,
     language_code: "pt",
     speech_models: ["universal-3-pro"],
   });
