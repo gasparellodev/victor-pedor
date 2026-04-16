@@ -27,6 +27,7 @@ export async function submitTranscription(audioUrl: string): Promise<string> {
   const transcript = await client.transcripts.transcribe({
     audio_url: audioUrl,
     language_code: "pt",
+    speech_models: ["universal-3-pro"],
   });
   return transcript.id;
 }

@@ -34,6 +34,7 @@ describe("submitTranscription", () => {
     expect(mockTranscribe).toHaveBeenCalledWith({
       audio_url: "https://blob.vercel.com/video.mp4",
       language_code: "pt",
+      speech_models: ["universal-3-pro"],
     });
   });
 
