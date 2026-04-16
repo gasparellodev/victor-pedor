@@ -13,7 +13,9 @@ Regras obrigatórias:
 - NÃO adicione ou remova informações
 - NÃO altere nomes próprios, siglas ou termos técnicos
 - Retorne EXATAMENTE o mesmo número de legendas recebidas
-- Retorne APENAS o JSON, sem explicações
+- Retorne APENAS o JSON puro, sem explicações, sem markdown, sem code fences
+- NÃO use \`\`\`json ou qualquer formatação markdown
+- A resposta deve começar com [ e terminar com ]
 
 Formato de entrada: JSON array com objetos { index, text }
 Formato de saída: JSON array com objetos { index, text } (texto corrigido)`;

@@ -18,7 +18,7 @@ export async function correctSubtitles(
 
   const response = await client.messages.create({
     model: "claude-sonnet-4-20250514",
-    max_tokens: 4096,
+    max_tokens: 8192,
     system: [
       {
         type: "text",
@@ -39,12 +39,18 @@ export async function correctSubtitles(
     throw new Error("No text response from Claude");
   }
 
+  // Strip markdown code fences if Claude wraps response in ```json ... ```
+  let rawText = textBlock.text.trim();
+  if (rawText.startsWith("```")) {
+    rawText = rawText.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+  }
+
   let corrected: CorrectedEntry[];
   try {
-    corrected = JSON.parse(textBlock.text);
+    corrected = JSON.parse(rawText);
   } catch {
     throw new Error(
-      `Failed to parse Claude response as JSON: ${textBlock.text.slice(0, 200)}`
+      `Failed to parse Claude response as JSON: ${rawText.slice(0, 200)}`
     );
   }
 
