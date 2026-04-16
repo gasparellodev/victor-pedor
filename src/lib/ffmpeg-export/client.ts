@@ -6,27 +6,32 @@ import { generateAssContent } from "./ass-generator";
 
 let ffmpegInstance: FFmpeg | null = null;
 
-export async function initFFmpeg(
-  onProgress?: (progress: number) => void
-): Promise<FFmpeg> {
+export async function initFFmpeg(): Promise<FFmpeg> {
   if (ffmpegInstance?.loaded) return ffmpegInstance;
 
   const ffmpeg = new FFmpeg();
 
-  if (onProgress) {
-    ffmpeg.on("progress", ({ progress }) => {
-      onProgress(Math.round(progress * 100));
+  try {
+    // Self-hosted ffmpeg-core files (no CDN dependency)
+    const baseURL = "/ffmpeg";
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
     });
+  } catch (err) {
+    ffmpeg.terminate();
+    throw err;
   }
-
-  const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-  await ffmpeg.load({
-    coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-    wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-  });
 
   ffmpegInstance = ffmpeg;
   return ffmpeg;
+}
+
+export function terminateFFmpeg(): void {
+  if (ffmpegInstance) {
+    ffmpegInstance.terminate();
+    ffmpegInstance = null;
+  }
 }
 
 export interface ExportOptions {
@@ -47,44 +52,50 @@ export async function exportVideoWithSubtitles({
   onStage,
 }: ExportOptions): Promise<Uint8Array> {
   onStage?.("loading");
-  const ffmpeg = await initFFmpeg(onProgress);
+  const ffmpeg = await initFFmpeg();
+
+  // Register progress handler for this export
+  const progressHandler = ({ progress }: { progress: number }) => {
+    onProgress?.(Math.round(progress * 100));
+  };
+  ffmpeg.on("progress", progressHandler);
 
   onStage?.("processing");
 
-  // Write input video
-  const videoData = await fetchFile(videoUrl);
-  await ffmpeg.writeFile("input.mp4", videoData);
+  try {
+    // Write input video
+    const videoData = await fetchFile(videoUrl);
+    await ffmpeg.writeFile("input.mp4", videoData);
 
-  // Write ASS subtitle file
-  const assContent = generateAssContent(subtitles, style);
-  const encoder = new TextEncoder();
-  await ffmpeg.writeFile("subtitles.ass", encoder.encode(assContent));
+    // Write ASS subtitle file
+    const assContent = generateAssContent(subtitles, style);
+    const encoder = new TextEncoder();
+    await ffmpeg.writeFile("subtitles.ass", encoder.encode(assContent));
 
-  // Run ffmpeg: burn subtitles into video
-  await ffmpeg.exec([
-    "-i", "input.mp4",
-    "-vf", "ass=subtitles.ass",
-    "-c:a", "copy",
-    "-preset", "ultrafast",
-    outputFilename,
-  ]);
+    // Run ffmpeg: burn subtitles into video
+    await ffmpeg.exec([
+      "-i", "input.mp4",
+      "-vf", "ass=subtitles.ass",
+      "-c:a", "copy",
+      "-preset", "ultrafast",
+      outputFilename,
+    ]);
 
-  // Read output
-  const data = await ffmpeg.readFile(outputFilename);
-
-  // Cleanup
-  await ffmpeg.deleteFile("input.mp4");
-  await ffmpeg.deleteFile("subtitles.ass");
-  await ffmpeg.deleteFile(outputFilename);
-
-  onStage?.("done");
-  return data as Uint8Array;
+    // Read output
+    const data = await ffmpeg.readFile(outputFilename);
+    onStage?.("done");
+    return data as Uint8Array;
+  } finally {
+    // Cleanup virtual FS and detach progress handler
+    ffmpeg.off("progress", progressHandler);
+    await ffmpeg.deleteFile("input.mp4").catch(() => {});
+    await ffmpeg.deleteFile("subtitles.ass").catch(() => {});
+    await ffmpeg.deleteFile(outputFilename).catch(() => {});
+  }
 }
 
 export function downloadBlob(data: Uint8Array, filename: string): void {
-  const arrayBuffer = new ArrayBuffer(data.byteLength);
-  new Uint8Array(arrayBuffer).set(data);
-  const blob = new Blob([arrayBuffer], { type: "video/mp4" });
+  const blob = new Blob([data as BlobPart], { type: "video/mp4" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;

@@ -14,9 +14,10 @@ interface ExportButtonProps {
 export function ExportButton({ videoUrl, subtitles, style, videoTitle }: ExportButtonProps) {
   const { stage, progress, error, startExport, reset } = useFFmpegExport();
 
-  const filename = videoTitle
-    ? `${videoTitle.replace(/\.[^/.]+$/, "")}-subtitled.mp4`
-    : "video-with-subtitles.mp4";
+  const sanitizedTitle = videoTitle
+    ? videoTitle.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z0-9_\- ]/g, "").slice(0, 100)
+    : "video-with-subtitles";
+  const filename = `${sanitizedTitle}-subtitled.mp4`;
 
   const handleExport = async () => {
     await startExport({ videoUrl, subtitles, style, filename });

@@ -4,11 +4,12 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        // SharedArrayBuffer headers only for video editor routes (ffmpeg.wasm)
+        source: "/videos/:path*",
         headers: [
           {
             key: "Cross-Origin-Embedder-Policy",
-            value: "require-corp",
+            value: "credentialless",
           },
           {
             key: "Cross-Origin-Opener-Policy",

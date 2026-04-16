@@ -26,7 +26,7 @@ export function msToAssTimestamp(ms: number): string {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = Math.floor(totalSeconds % 60);
-  const centiseconds = Math.round((totalSeconds % 1) * 100);
+  const centiseconds = Math.min(99, Math.round((totalSeconds % 1) * 100));
 
   return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${centiseconds.toString().padStart(2, "0")}`;
 }
