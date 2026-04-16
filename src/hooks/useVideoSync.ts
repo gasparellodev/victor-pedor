@@ -1,28 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export function useVideoSync(
   videoRef: React.RefObject<HTMLVideoElement | null>
 ): number {
   const [currentTime, setCurrentTime] = useState(0);
-  const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    let raf = 0;
 
     function tick() {
-      if (video) {
-        setCurrentTime(video.currentTime * 1000); // convert to ms
-      }
-      rafRef.current = requestAnimationFrame(tick);
+      const video = videoRef.current;
+      if (video) setCurrentTime(video.currentTime * 1000);
+      raf = requestAnimationFrame(tick);
     }
 
-    rafRef.current = requestAnimationFrame(tick);
+    raf = requestAnimationFrame(tick);
 
     return () => {
-      cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(raf);
     };
   }, [videoRef]);
 
