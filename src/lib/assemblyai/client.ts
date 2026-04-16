@@ -1,4 +1,5 @@
 import { AssemblyAI } from "assemblyai";
+import { get } from "@vercel/blob";
 import type { Subtitle } from "@/types/subtitle";
 
 export interface TranscribedWord {
@@ -25,12 +26,25 @@ function getClient(): AssemblyAI {
 export async function submitTranscription(audioUrl: string): Promise<string> {
   const client = getClient();
 
-  // Fetch video from private Blob store and upload directly to AssemblyAI
-  const response = await fetch(audioUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch video from storage: ${response.status}`);
+  // Download video from private Blob store using authenticated SDK
+  const blobResult = await get(audioUrl, { access: "private" });
+  if (!blobResult) {
+    throw new Error("Failed to fetch video from storage: not found");
   }
-  const buffer = await response.arrayBuffer();
+
+  // Read stream into buffer
+  if (!blobResult.stream) {
+    throw new Error("Failed to read video stream from storage");
+  }
+  const reader = blobResult.stream.getReader();
+  const chunks: Uint8Array[] = [];
+  let done = false;
+  while (!done) {
+    const result = await reader.read();
+    done = result.done;
+    if (result.value) chunks.push(result.value);
+  }
+  const buffer = Buffer.concat(chunks);
 
   const uploadUrl = await client.files.upload(Buffer.from(buffer));
 
