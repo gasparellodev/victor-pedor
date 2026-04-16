@@ -14,6 +14,7 @@ export type VideoStatus = (typeof VIDEO_STATUSES)[number];
 export interface SubtitleStyle {
   fontFamily: string;
   fontSize: number;
+  fontWeight: "400" | "500" | "600" | "700";
   fontColor: string;
   backgroundColor: string;
   position: "top" | "center" | "bottom";
@@ -58,6 +59,7 @@ export const UpdateVideoSchema = z.object({
     .object({
       fontFamily: z.string(),
       fontSize: z.number(),
+      fontWeight: z.enum(["400", "500", "600", "700"]),
       fontColor: z.string(),
       backgroundColor: z.string(),
       position: z.enum(["top", "center", "bottom"]),
@@ -85,6 +87,7 @@ export const InternalUpdateVideoSchema = z.object({
     .object({
       fontFamily: z.string(),
       fontSize: z.number(),
+      fontWeight: z.enum(["400", "500", "600", "700"]),
       fontColor: z.string(),
       backgroundColor: z.string(),
       position: z.enum(["top", "center", "bottom"]),
