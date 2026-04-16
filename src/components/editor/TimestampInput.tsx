@@ -61,14 +61,14 @@ export function TimestampInput({ value, onChange, label }: TimestampInputProps) 
       aria-label={label}
       className={`
         w-[120px] px-2.5 py-1.5 text-[12px] font-mono rounded-md
-        bg-[var(--bg-primary)] border transition-colors duration-150
+        bg-[var(--surface)] border transition-colors duration-150
         focus:outline-none focus:ring-1
         ${
           error
-            ? "border-[var(--danger)] focus:ring-[var(--danger)]"
-            : "border-[var(--border-default)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"
+            ? "border-[var(--error)] focus:ring-[var(--error)]"
+            : "border-[var(--outline-variant)] focus:border-[var(--primary)] focus:ring-[var(--primary)]"
         }
-        text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]
+        text-[var(--on-surface)] placeholder:text-[var(--outline)]
       `}
       placeholder="00:00:00,000"
     />

@@ -1,7 +1,7 @@
-# Victor Pedor — Gerador de Legendas SRT
+# SpeakChuk Video — AI Subtitle Generator
 
 ## Sobre
-Aplicação Next.js que gera legendas SRT a partir de vídeos usando AssemblyAI + Claude API.
+Aplicação Next.js que gera legendas SRT a partir de vídeos usando AssemblyAI + Claude API. Design system baseado no Stitch/Lumen Edit (Material Design 3 dark theme).
 
 ## Regras do Projeto
 - TypeScript strict mode — sem `any`

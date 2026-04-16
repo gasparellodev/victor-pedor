@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumen Edit | Pro Video Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#004395",
+                    "on-secondary-fixed-variant": "#304671",
+                    "outline-variant": "#424754",
+                    "on-tertiary-fixed": "#311400",
+                    "tertiary-container": "#df7412",
+                    "surface-tint": "#adc6ff",
+                    "on-secondary": "#182f59",
+                    "tertiary-fixed-dim": "#ffb786",
+                    "on-secondary-fixed": "#001a42",
+                    "on-primary": "#002e6a",
+                    "tertiary": "#ffb786",
+                    "surface-dim": "#10131a",
+                    "secondary-container": "#304671",
+                    "inverse-surface": "#e1e2ec",
+                    "surface-container-high": "#272a31",
+                    "on-tertiary-container": "#461f00",
+                    "inverse-primary": "#005ac2",
+                    "on-surface": "#e1e2ec",
+                    "error-container": "#93000a",
+                    "surface": "#10131a",
+                    "on-primary-container": "#00285d",
+                    "surface-container-lowest": "#0b0e15",
+                    "surface-container-low": "#191b23",
+                    "on-surface-variant": "#c2c6d6",
+                    "primary-fixed": "#d8e2ff",
+                    "on-primary-fixed": "#001a42",
+                    "secondary": "#b1c6f9",
+                    "primary": "#adc6ff",
+                    "on-background": "#e1e2ec",
+                    "inverse-on-surface": "#2e3038",
+                    "on-tertiary": "#502400",
+                    "surface-container-highest": "#32353c",
+                    "primary-fixed-dim": "#adc6ff",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "surface-container": "#1d2027",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#b1c6f9",
+                    "surface-variant": "#32353c",
+                    "background": "#10131a",
+                    "on-error": "#690005",
+                    "primary-container": "#4d8eff",
+                    "on-secondary-container": "#9fb5e7",
+                    "surface-bright": "#363941",
+                    "outline": "#8c909f",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#ffdcc6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(50, 53, 60, 0.6);
+            backdrop-filter: blur(12px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0b0e15;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #424754;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container/30 overflow-hidden h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="w-full h-16 sticky top-0 z-50 bg-[#10131a] dark:bg-slate-950 bg-slate-900/50 backdrop-blur-md flex justify-between items-center px-6">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black text-blue-200 tracking-tighter font-['Manrope']">Lumen Edit</span>
+<div class="hidden md:flex items-center bg-surface-container-low px-3 py-1.5 rounded-lg border border-outline-variant/20">
+<span class="material-symbols-outlined text-slate-400 text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 text-on-surface-variant w-48 placeholder:text-slate-500" placeholder="Search project..." type="text"/>
+</div>
+</div>
+<nav class="flex items-center gap-6">
+<button class="text-blue-300 border-b-2 border-blue-400 font-['Manrope'] tracking-tight font-bold py-5 hover:text-blue-200 transition-colors duration-150">Projects</button>
+<button class="text-slate-400 font-['Manrope'] tracking-tight font-bold py-5 hover:text-blue-200 transition-colors duration-150">Templates</button>
+<button class="text-slate-400 font-['Manrope'] tracking-tight font-bold py-5 hover:text-blue-200 transition-colors duration-150">Assets</button>
+</nav>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-highest rounded-full">
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="help">help</span>
+</div>
+<button class="text-blue-400 dark:text-blue-300 text-sm font-semibold hover:text-blue-200 transition-colors">Export</button>
+<button class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg shadow-primary-container/20 active:scale-95 duration-150">Upgrade</button>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant/30" data-alt="professional headshot of a creative director in a dark studio setting with cinematic rim lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK-lgmNP75HnNjjhsACiE1EzsebdR1Y5Q6QQCEBpqq-kxOD7Fs_XmEjDeqllPlAifjH2ANhgnG05MQTzAaI4d_GYiP5WoyMyj0NnGUrhl25Z2j2sRNi0nwesDjptEPKjI-3vWY0ybKswjn6LZ5QmfJJYy9pLDL5vebExoNK9Cj6Zv5WwBYCy5MM1C2lVVZX5EZSjCKh66nZNos1dt0bIiFMtoV5tCQ9QaJTYJTTUy9eMXJdyzNMWRl2T4DImyhJt4Tkf-2ymJBc-Qs"/>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar (Left) -->
+<aside class="h-full w-64 bg-[#10131a]/80 dark:bg-slate-900/80 bg-slate-950/20 shadow-[4px_0_24px_rgba(0,0,0,0.3)] flex flex-col pt-4 pb-6 border-r border-outline-variant/10">
+<div class="px-4 mb-8">
+<div class="flex items-center gap-3 p-3 bg-surface-container rounded-xl">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="video_settings">video_settings</span>
+</div>
+<div>
+<div class="font-headline text-sm font-bold text-on-surface">Workspace</div>
+<div class="font-body text-[10px] uppercase tracking-widest text-primary font-bold">Pro Plan</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="flex items-center gap-3 bg-blue-500/10 text-blue-300 border-l-2 border-blue-400 px-4 py-3 font-['Inter'] text-sm font-medium tracking-wide transition-all duration-200 ease-in-out cursor-pointer">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+<span>Projects</span>
+</div>
+<div class="flex items-center gap-3 text-slate-500 px-4 py-3 font-['Inter'] text-sm font-medium tracking-wide hover:bg-slate-800/50 hover:text-slate-200 transition-all duration-200 ease-in-out cursor-pointer">
+<span class="material-symbols-outlined" data-icon="video_library">video_library</span>
+<span>Assets</span>
+</div>
+<div class="flex items-center gap-3 text-slate-500 px-4 py-3 font-['Inter'] text-sm font-medium tracking-wide hover:bg-slate-800/50 hover:text-slate-200 transition-all duration-200 ease-in-out cursor-pointer">
+<span class="material-symbols-outlined" data-icon="auto_awesome_motion">auto_awesome_motion</span>
+<span>Templates</span>
+</div>
+<div class="flex items-center gap-3 text-slate-500 px-4 py-3 font-['Inter'] text-sm font-medium tracking-wide hover:bg-slate-800/50 hover:text-slate-200 transition-all duration-200 ease-in-out cursor-pointer">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</div>
+</nav>
+<div class="px-4 mt-auto space-y-4">
+<button class="w-full py-3 px-4 bg-gradient-to-br from-primary to-primary-container text-on-primary-container rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-xl shadow-primary/10 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                    New Project
+                </button>
+<div class="flex items-center gap-3 text-slate-500 px-4 py-3 font-['Inter'] text-sm font-medium tracking-wide hover:text-slate-200 transition-all cursor-pointer">
+<span class="material-symbols-outlined" data-icon="support">support</span>
+<span>Help Center</span>
+</div>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 flex flex-col bg-surface relative overflow-hidden">
+<!-- Video Player Canvas -->
+<section class="flex-1 flex items-center justify-center p-8 bg-surface-container-lowest/50">
+<div class="relative w-full max-w-4xl aspect-video bg-black rounded-2xl shadow-2xl overflow-hidden group">
+<img alt="Editor Preview" class="w-full h-full object-cover opacity-90" data-alt="cinematic close-up of a high-end cinema camera lens with soft blue and orange lens flares in a dark studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQTOQ1s_V1w4Q3CJq7oeiGP64dhzcTsjAoyTvlNx7NyYzqIiwvTZtLqYz3r0_Ze79GUg0P0FrS7-ujNfaYAA_ujhqCOuXmvvmtwazigBYJ9nIJPHADmrWk9a1BjIL8l_V9ddzVUpkd9zRUpxOQ68KCTW8R2_lG6upnhL7s-on8FsH0lnNjqS2IKYhjRzA2DN6bAGSEEX4peOTH_3CEh2I0pYmDXm7W5UJi344_F8tp5RALaZlIKuKtJ124Hxcg_PHwqSYTgydBPRre"/>
+<!-- Floating Subtitle Preview -->
+<div class="absolute bottom-12 left-0 right-0 flex justify-center px-12 pointer-events-none">
+<p class="text-white text-2xl font-bold text-center px-4 py-2 rounded-lg bg-black/40 backdrop-blur-sm border border-white/10 font-headline tracking-tight">
+                            "And that's how we achieve cinematic depth."
+                        </p>
+</div>
+<!-- Video Controls Overlay -->
+<div class="absolute bottom-0 left-0 right-0 p-4 glass-panel flex items-center gap-6 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+<button class="text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden relative">
+<div class="absolute top-0 left-0 h-full w-1/3 bg-primary"></div>
+</div>
+<div class="flex items-center gap-4 text-xs font-mono text-on-surface-variant font-bold tracking-widest">
+<span>00:12:45</span>
+<span class="text-outline">/</span>
+<span>00:45:00</span>
+</div>
+<button class="text-on-surface hover:text-primary">
+<span class="material-symbols-outlined" data-icon="fullscreen">fullscreen</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Bottom Timeline -->
+<section class="h-64 bg-surface-container-low flex flex-col border-t border-outline-variant/10">
+<div class="h-10 border-b border-outline-variant/10 flex items-center px-6 justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="history">history</span>
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="undo">undo</span>
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="redo">redo</span>
+</div>
+<div class="flex items-center gap-6">
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Zoom</span>
+<input class="w-32 accent-primary-container h-1 bg-surface-container-highest rounded-lg appearance-none" type="range"/>
+</div>
+</div>
+<div class="flex-1 overflow-x-auto custom-scrollbar relative">
+<!-- Playhead -->
+<div class="absolute top-0 left-1/3 h-full w-px bg-tertiary z-20 shadow-[0_0_8px_#ffb786]">
+<div class="absolute -top-1 -left-1 w-2.5 h-2.5 bg-tertiary rotate-45"></div>
+</div>
+<div class="min-w-[2000px] h-full p-4 space-y-3">
+<!-- Subtitle Blocks Track -->
+<div class="flex gap-1 h-12">
+<div class="w-48 bg-surface-container-highest border-l-2 border-primary rounded-md p-2 flex items-center">
+<span class="text-[10px] font-medium text-primary truncate">"And that's how we..."</span>
+</div>
+<div class="w-12"></div>
+<div class="w-64 bg-surface-container-highest border-l-2 border-primary rounded-md p-2 flex items-center">
+<span class="text-[10px] font-medium text-primary truncate">"...achieve cinematic depth."</span>
+</div>
+<div class="w-32 bg-surface-container-highest/50 rounded-md p-2 flex items-center opacity-40">
+<span class="text-[10px] font-medium text-slate-400 truncate">Silence...</span>
+</div>
+</div>
+<!-- Waveform Track -->
+<div class="h-20 bg-surface-container-lowest rounded-xl overflow-hidden relative flex items-center">
+<div class="absolute inset-0 flex items-center gap-0.5 px-2 opacity-50">
+<!-- Mock Audio Waves -->
+<div class="w-1 h-4 bg-primary-container rounded-full"></div>
+<div class="w-1 h-6 bg-primary-container rounded-full"></div>
+<div class="w-1 h-10 bg-primary-container rounded-full"></div>
+<div class="w-1 h-8 bg-primary-container rounded-full"></div>
+<div class="w-1 h-12 bg-primary-container rounded-full"></div>
+<div class="w-1 h-6 bg-primary-container rounded-full"></div>
+<div class="w-1 h-3 bg-primary-container rounded-full"></div>
+<div class="w-1 h-2 bg-primary-container rounded-full"></div>
+<div class="w-1 h-8 bg-primary-container rounded-full"></div>
+<div class="w-1 h-14 bg-primary-container rounded-full"></div>
+<div class="w-1 h-10 bg-primary-container rounded-full"></div>
+<div class="w-1 h-6 bg-primary-container rounded-full"></div>
+<div class="w-1 h-4 bg-primary-container rounded-full"></div>
+<div class="w-1 h-8 bg-primary-container rounded-full"></div>
+<div class="w-1 h-12 bg-primary-container rounded-full"></div>
+<div class="w-1 h-6 bg-primary-container rounded-full"></div>
+<div class="w-1 h-3 bg-primary-container rounded-full"></div>
+<div class="w-1 h-2 bg-primary-container rounded-full"></div>
+<!-- Repeat wave effect -->
+<div class="w-1 h-4 bg-primary-container rounded-full"></div>
+<div class="w-1 h-6 bg-primary-container rounded-full"></div>
+<div class="w-1 h-10 bg-primary-container rounded-full"></div>
+<div class="w-1 h-8 bg-primary-container rounded-full"></div>
+<div class="w-1 h-12 bg-primary-container rounded-full"></div>
+<div class="w-1 h-6 bg-primary-container rounded-full"></div>
+</div>
+<span class="absolute left-4 top-2 text-[8px] font-black uppercase tracking-tighter text-on-surface-variant/40">Audio Track 1</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Right Sidebar (Edit & Style) -->
+<aside class="w-80 bg-surface-container-low border-l border-outline-variant/10 flex flex-col">
+<!-- Tabs -->
+<div class="flex border-b border-outline-variant/10">
+<button class="flex-1 py-4 text-sm font-bold text-primary border-b-2 border-primary bg-primary/5 transition-colors">Edit Text</button>
+<button class="flex-1 py-4 text-sm font-bold text-slate-500 hover:text-on-surface transition-colors">Style</button>
+</div>
+<div class="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-4">
+<!-- Transcription List -->
+<div class="space-y-3">
+<div class="p-3 bg-surface-container-highest rounded-lg border-l-4 border-primary shadow-lg">
+<div class="flex justify-between items-center mb-2">
+<span class="text-[10px] font-bold text-primary-fixed tracking-widest uppercase">00:00:12</span>
+<span class="material-symbols-outlined text-xs text-slate-500" data-icon="more_horiz">more_horiz</span>
+</div>
+<p class="text-sm text-on-surface leading-relaxed font-medium">And that's how we achieve cinematic depth.</p>
+</div>
+<div class="p-3 bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors group cursor-pointer">
+<div class="flex justify-between items-center mb-2">
+<span class="text-[10px] font-bold text-slate-500 tracking-widest uppercase">00:00:15</span>
+<span class="material-symbols-outlined text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity" data-icon="edit">edit</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">It starts with the lighting, then the lens choice, and finally the post-production color grade.</p>
+</div>
+<div class="p-3 bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors group cursor-pointer">
+<div class="flex justify-between items-center mb-2">
+<span class="text-[10px] font-bold text-slate-500 tracking-widest uppercase">00:00:22</span>
+<span class="material-symbols-outlined text-xs text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity" data-icon="edit">edit</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Let's dive into the first step: Lighting.</p>
+</div>
+</div>
+<!-- Style Controls (Hidden/Visible depending on Tab - shown here as section) -->
+<div class="pt-6 border-t border-outline-variant/10 space-y-6">
+<h3 class="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Caption Style</h3>
+<!-- Font Choice -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Font Family</label>
+<div class="flex items-center justify-between bg-surface-container rounded-lg p-3 cursor-pointer hover:bg-surface-container-high">
+<span class="text-sm font-bold font-headline">Manrope</span>
+<span class="material-symbols-outlined text-sm" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Size & Weight -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Size</label>
+<div class="flex items-center bg-surface-container rounded-lg p-2">
+<input class="bg-transparent border-none w-full text-sm font-bold focus:ring-0" type="number" value="24"/>
+<span class="text-[10px] text-slate-500 pr-1">PX</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Weight</label>
+<div class="flex items-center bg-surface-container rounded-lg p-2">
+<select class="bg-transparent border-none w-full text-xs font-bold focus:ring-0 appearance-none">
+<option>Bold</option>
+<option>Extra Bold</option>
+<option>Black</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Color Grid -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Colors</label>
+<div class="flex gap-2">
+<div class="w-8 h-8 rounded-full bg-white border border-outline-variant cursor-pointer ring-2 ring-primary ring-offset-2 ring-offset-surface"></div>
+<div class="w-8 h-8 rounded-full bg-primary-container cursor-pointer"></div>
+<div class="w-8 h-8 rounded-full bg-tertiary cursor-pointer"></div>
+<div class="w-8 h-8 rounded-full bg-black cursor-pointer border border-outline-variant"></div>
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-tertiary cursor-pointer"></div>
+</div>
+</div>
+<!-- Alignment -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Alignment</label>
+<div class="flex bg-surface-container rounded-lg p-1">
+<button class="flex-1 py-1.5 flex justify-center text-slate-500 hover:text-on-surface"><span class="material-symbols-outlined text-sm" data-icon="format_align_left">format_align_left</span></button>
+<button class="flex-1 py-1.5 flex justify-center text-on-surface bg-surface-container-highest rounded-md"><span class="material-symbols-outlined text-sm" data-icon="format_align_center">format_align_center</span></button>
+<button class="flex-1 py-1.5 flex justify-center text-slate-500 hover:text-on-surface"><span class="material-symbols-outlined text-sm" data-icon="format_align_right">format_align_right</span></button>
+</div>
+</div>
+<button class="w-full py-4 bg-surface-container-highest rounded-xl text-xs font-bold uppercase tracking-widest text-primary border border-primary/20 hover:bg-primary/5 transition-all">
+                        Apply to All Segments
+                    </button>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

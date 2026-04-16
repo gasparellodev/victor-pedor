@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#004395",
+                        "on-secondary-fixed-variant": "#304671",
+                        "outline-variant": "#424754",
+                        "on-tertiary-fixed": "#311400",
+                        "tertiary-container": "#df7412",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary": "#182f59",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "on-secondary-fixed": "#001a42",
+                        "on-primary": "#002e6a",
+                        "tertiary": "#ffb786",
+                        "surface-dim": "#10131a",
+                        "secondary-container": "#304671",
+                        "inverse-surface": "#e1e2ec",
+                        "surface-container-high": "#272a31",
+                        "on-tertiary-container": "#461f00",
+                        "inverse-primary": "#005ac2",
+                        "on-surface": "#e1e2ec",
+                        "error-container": "#93000a",
+                        "surface": "#10131a",
+                        "on-primary-container": "#00285d",
+                        "surface-container-lowest": "#0b0e15",
+                        "surface-container-low": "#191b23",
+                        "on-surface-variant": "#c2c6d6",
+                        "primary-fixed": "#d8e2ff",
+                        "on-primary-fixed": "#001a42",
+                        "secondary": "#b1c6f9",
+                        "primary": "#adc6ff",
+                        "on-background": "#e1e2ec",
+                        "inverse-on-surface": "#2e3038",
+                        "on-tertiary": "#502400",
+                        "surface-container-highest": "#32353c",
+                        "primary-fixed-dim": "#adc6ff",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "surface-container": "#1d2027",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#b1c6f9",
+                        "surface-variant": "#32353c",
+                        "background": "#10131a",
+                        "on-error": "#690005",
+                        "primary-container": "#4d8eff",
+                        "on-secondary-container": "#9fb5e7",
+                        "surface-bright": "#363941",
+                        "outline": "#8c909f",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#ffdcc6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(50, 53, 60, 0.6);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="w-full h-16 sticky top-0 z-50 bg-[#10131a] dark:bg-slate-950 bg-slate-900/50 backdrop-blur-md flex justify-between items-center px-6 w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black text-blue-200 tracking-tighter font-['Manrope']">Lumen Edit</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-400 font-['Manrope'] tracking-tight font-bold hover:text-blue-200 transition-colors" href="#">Projects</a>
+<a class="text-slate-400 font-['Manrope'] tracking-tight font-bold hover:text-blue-200 transition-colors" href="#">Assets</a>
+<a class="text-blue-300 border-b-2 border-blue-400 font-['Manrope'] tracking-tight font-bold" href="#">Export</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:text-blue-200 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded-lg font-['Manrope'] font-bold text-sm tracking-tight active:scale-95 duration-150">Upgrade</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img alt="User Profile" data-alt="close-up portrait of a professional video editor in a dimly lit studio with blue ambient lighting reflecting on their face" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpzgrbO_YtU_KU9HIfeIpCEwwkAuvAt2VEgGO_iKyfbZuGQMSmXr1sVyXDxQ961DDtPFcqzF6GPYL7hyPLrL8MPXT-G3YD3-MxHvc6f4ABCZmKP_5Zt4KRYYA70Y3Wtso3WTznswwgD9u42vJ9_XzS25c5AU4Yr7xpP-UCaraNlBfLOZBqgIOCCAF3oYofm6tQc-UCWnH6XJEXyqeEe9L57wKY7_0EynrY3OcdRioi9n6QCKLVVW_5dsONGAkASDCTDclUCcLImPPM"/>
+</div>
+</div>
+</header>
+<main class="flex flex-col md:flex-row min-h-[calc(100vh-4rem)]">
+<!-- Sidebar suppressed for Export flow as per Shell Visibility Rule: Task-Focused -->
+<div class="flex-1 px-6 py-8 max-w-7xl mx-auto w-full">
+<div class="flex flex-col lg:grid lg:grid-cols-12 gap-8">
+<!-- Left Column: Project Summary & Preview -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="space-y-1">
+<h1 class="text-3xl font-headline font-extrabold tracking-tight text-on-surface">Finalize Export</h1>
+<p class="text-on-surface-variant">Review your project details and choose your delivery format.</p>
+</div>
+<!-- Project Summary Card -->
+<div class="bg-surface-container-low rounded-xl p-6 relative overflow-hidden group">
+<div class="flex flex-col md:flex-row gap-6">
+<div class="w-full md:w-64 aspect-video rounded-lg overflow-hidden bg-surface-container-highest flex-shrink-0">
+<img alt="Video Preview Thumbnail" class="w-full h-full object-cover" data-alt="cinematic wide shot of a futuristic neon city street at night with rain reflecting colorful lights on the asphalt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9NhAUBAi1Y8_ySStzranTsMM3ZB6zb84ccak5Y2mUMvsufrycN9bvJK7qzj9D40QBvxYRRfXzjDMadP4PttUaxXH0Eg0tH4J_gdJ1bIWpqUIm-os_eIasa0E99iv9VPiYyGGiO8H4A-jqtGS8s8FLwGNEVrRwuqXjmIK0TR0SEhamkWY0JZILsYO6TGv57g0IqEAy8j8TerfuOj9TcCgmmei033F0MrlIKDoC-Ofldo7olTChYWFvWVeAK4wLnFSLZ3jMQYu8E2GO"/>
+</div>
+<div class="flex-1 space-y-4">
+<div>
+<h3 class="text-lg font-headline font-bold text-primary">Cyberpunk_Documentary_Final_v2</h3>
+<p class="text-sm text-on-surface-variant">Last edited 2 hours ago</p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-highest/50 p-3 rounded-lg">
+<p class="text-[0.6875rem] font-label uppercase tracking-widest text-on-surface-variant">Duration</p>
+<p class="text-sm font-medium font-body">12:44:02</p>
+</div>
+<div class="bg-surface-container-highest/50 p-3 rounded-lg">
+<p class="text-[0.6875rem] font-label uppercase tracking-widest text-on-surface-variant">Subtitles</p>
+<p class="text-sm font-medium font-body">1,240 blocks</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Export Options: Subtitles -->
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary" data-icon="subtitles">subtitles</span>
+<h2 class="text-xl font-headline font-bold">Subtitle Tracks</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- SRT -->
+<button class="flex flex-col items-center justify-center p-6 rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all border border-outline-variant/10 group">
+<span class="material-symbols-outlined text-4xl mb-3 text-on-surface-variant group-hover:text-primary transition-colors" data-icon="description">description</span>
+<span class="font-bold">.SRT</span>
+<span class="text-xs text-on-surface-variant mt-1">SubRip Text</span>
+</button>
+<!-- VTT -->
+<button class="flex flex-col items-center justify-center p-6 rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all border border-outline-variant/10 group">
+<span class="material-symbols-outlined text-4xl mb-3 text-on-surface-variant group-hover:text-primary transition-colors" data-icon="html">html</span>
+<span class="font-bold">.VTT</span>
+<span class="text-xs text-on-surface-variant mt-1">Web Video Text Tracks</span>
+</button>
+<!-- TXT -->
+<button class="flex flex-col items-center justify-center p-6 rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all border border-outline-variant/10 group">
+<span class="material-symbols-outlined text-4xl mb-3 text-on-surface-variant group-hover:text-primary transition-colors" data-icon="article">article</span>
+<span class="font-bold">.TXT</span>
+<span class="text-xs text-on-surface-variant mt-1">Plain Text Transcript</span>
+</button>
+</div>
+</div>
+<!-- Burn-in Toggle -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 flex items-center justify-between">
+<div class="flex gap-4 items-center">
+<div class="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="auto_awesome" data-weight="fill" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<h4 class="font-bold">Burn-in Subtitles</h4>
+<p class="text-sm text-on-surface-variant">Renders subtitles directly into the video file.</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+<!-- Right Column: Settings & CTA -->
+<div class="lg:col-span-5">
+<div class="sticky top-24 space-y-6">
+<div class="glass-panel rounded-xl p-8 border border-outline-variant/20 shadow-2xl">
+<h3 class="text-xl font-headline font-bold mb-6">Video Settings</h3>
+<div class="space-y-6">
+<!-- Resolution -->
+<div class="space-y-3">
+<label class="text-[0.6875rem] font-label uppercase tracking-widest text-on-surface-variant">Resolution</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-4 rounded-lg bg-surface-container-highest border-2 border-primary text-primary font-bold text-sm">4K (2160p)</button>
+<button class="py-2 px-4 rounded-lg bg-surface-container-low border-2 border-transparent hover:border-outline-variant text-on-surface-variant font-medium text-sm transition-all">1080p HD</button>
+<button class="py-2 px-4 rounded-lg bg-surface-container-low border-2 border-transparent hover:border-outline-variant text-on-surface-variant font-medium text-sm transition-all">720p</button>
+<button class="py-2 px-4 rounded-lg bg-surface-container-low border-2 border-transparent hover:border-outline-variant text-on-surface-variant font-medium text-sm transition-all">Social (9:16)</button>
+</div>
+</div>
+<!-- Quality -->
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<label class="text-[0.6875rem] font-label uppercase tracking-widest text-on-surface-variant">Quality / Bitrate</label>
+<span class="text-xs text-primary font-bold">High (32 Mbps)</span>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="1" type="range" value="85"/>
+<div class="flex justify-between text-[10px] text-on-surface-variant font-label uppercase">
+<span>Small Size</span>
+<span>Balanced</span>
+<span>ProRes</span>
+</div>
+</div>
+<!-- File Format -->
+<div class="space-y-3">
+<label class="text-[0.6875rem] font-label uppercase tracking-widest text-on-surface-variant">Format</label>
+<select class="w-full bg-surface-container-low border border-outline-variant/20 rounded-lg py-2.5 px-4 text-on-surface focus:ring-2 focus:ring-primary-container outline-none appearance-none font-medium">
+<option>MP4 (H.264)</option>
+<option>MOV (Apple ProRes)</option>
+<option>WebM (VP9)</option>
+</select>
+</div>
+<!-- Estimation -->
+<div class="pt-6 border-t border-outline-variant/10">
+<div class="flex justify-between items-center text-sm mb-2">
+<span class="text-on-surface-variant">Estimated File Size</span>
+<span class="font-bold text-on-surface">1.42 GB</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Processing Time</span>
+<span class="font-bold text-on-surface">~ 4 mins</span>
+</div>
+</div>
+<!-- Final CTA -->
+<button class="w-full py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-headline font-extrabold text-lg shadow-lg shadow-primary-container/20 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="ios_share">ios_share</span>
+                                    Start Export
+                                </button>
+</div>
+</div>
+<div class="flex items-center gap-2 px-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="info">info</span>
+<p class="text-xs">Your project will be saved to the cloud during export.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar for Mobile ONLY -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#10131a] dark:bg-slate-950 flex items-center justify-around z-50">
+<a class="flex flex-col items-center text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+<span class="text-[10px] uppercase font-label">Projects</span>
+</a>
+<a class="flex flex-col items-center text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="video_library">video_library</span>
+<span class="text-[10px] uppercase font-label">Assets</span>
+</a>
+<a class="flex flex-col items-center text-blue-300" href="#">
+<span class="material-symbols-outlined" data-icon="file_upload">file_upload</span>
+<span class="text-[10px] uppercase font-label">Export</span>
+</a>
+<a class="flex flex-col items-center text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] uppercase font-label">Settings</span>
+</a>
+</div>
+</body></html>

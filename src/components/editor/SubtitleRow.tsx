@@ -17,13 +17,13 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
         group flex items-start gap-3 p-3 rounded-lg border transition-all duration-150
         ${
           isActive
-            ? "border-[var(--accent)] bg-[var(--accent-subtle)]"
-            : "border-[var(--border-subtle)] hover:border-[var(--border-default)] bg-[var(--bg-secondary)]"
+            ? "border-[var(--primary)] bg-[rgba(173,198,255,0.12)]"
+            : "border-[var(--outline-variant)] hover:border-[var(--outline-variant)] bg-[var(--surface-container-low)]"
         }
       `}
     >
       {/* Index */}
-      <span className="text-[12px] font-mono text-[var(--text-tertiary)] mt-2 w-5 text-right shrink-0">
+      <span className="text-[12px] font-mono text-[var(--outline)] mt-2 w-5 text-right shrink-0">
         {subtitle.index}
       </span>
 
@@ -57,9 +57,9 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
         }
         className="
           flex-1 px-3 py-2 rounded-md text-[13px] leading-relaxed resize-none min-h-[52px]
-          bg-[var(--bg-primary)] border border-[var(--border-default)]
-          text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]
-          focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]
+          bg-[var(--surface)] border border-[var(--outline-variant)]
+          text-[var(--on-surface)] placeholder:text-[var(--outline)]
+          focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]
           transition-colors duration-150
         "
         aria-label={`Texto da legenda ${subtitle.index}`}
@@ -71,7 +71,7 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
         <button
           type="button"
           onClick={() => dispatch({ type: "DELETE", index: subtitle.index })}
-          className="text-[11px] px-2 py-1 rounded text-[var(--danger)] hover:bg-[var(--danger-subtle)] transition-colors"
+          className="text-[11px] px-2 py-1 rounded text-[var(--error)] hover:bg-[rgba(255,180,171,0.12)] transition-colors"
           title="Excluir legenda"
         >
           Excluir
@@ -79,7 +79,7 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
         <button
           type="button"
           onClick={() => dispatch({ type: "INSERT", afterIndex: subtitle.index })}
-          className="text-[11px] px-2 py-1 rounded text-[var(--accent)] hover:bg-[var(--accent-subtle)] transition-colors"
+          className="text-[11px] px-2 py-1 rounded text-[var(--primary)] hover:bg-[rgba(173,198,255,0.12)] transition-colors"
           title="Inserir legenda após"
         >
           Inserir
@@ -87,7 +87,7 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
         <button
           type="button"
           onClick={() => dispatch({ type: "MERGE", index: subtitle.index })}
-          className="text-[11px] px-2 py-1 rounded text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors"
+          className="text-[11px] px-2 py-1 rounded text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-high)] transition-colors"
           title="Mesclar com próxima"
         >
           Mesclar
@@ -101,7 +101,7 @@ export function SubtitleRow({ subtitle, isActive, dispatch }: SubtitleRowProps) 
               splitAt: Math.ceil(subtitle.text.split(" ").length / 2),
             })
           }
-          className="text-[11px] px-2 py-1 rounded text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] transition-colors"
+          className="text-[11px] px-2 py-1 rounded text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-high)] transition-colors"
           title="Dividir legenda"
         >
           Dividir
