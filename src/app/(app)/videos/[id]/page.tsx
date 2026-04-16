@@ -7,6 +7,7 @@ import { VideoPlayer } from "@/components/preview/VideoPlayer";
 import { SubtitleOverlay } from "@/components/preview/SubtitleOverlay";
 import { SubtitleEditor } from "@/components/editor/SubtitleEditor";
 import { StylePanel } from "@/components/editor/StylePanel";
+import { ExportButton } from "@/components/editor/ExportButton";
 import { useVideoSync } from "@/hooks/useVideoSync";
 import { useSubtitleState } from "@/hooks/useSubtitleState";
 import { useSubtitleStyle } from "@/hooks/useSubtitleStyle";
@@ -25,6 +26,7 @@ export default function VideoEditorPage() {
   const [error, setError] = useState<string | null>(null);
   const [localVideoUrl, setLocalVideoUrl] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<EditorTab>("text");
+  const { style: subtitleStyle, updateStyle, setStyle: setSubtitleStyle } = useSubtitleStyle(video?.id);
 
   // Fetch video data from DB
   useEffect(() => {
@@ -57,8 +59,6 @@ export default function VideoEditorPage() {
 
     fetchVideo();
   }, [params.id, dispatch, setSubtitleStyle]);
-
-  const { style: subtitleStyle, updateStyle, setStyle: setSubtitleStyle } = useSubtitleStyle(video?.id);
 
   const activeSubtitle = subtitles.find(
     (s) => currentTime >= s.startTime && currentTime <= s.endTime
@@ -140,12 +140,22 @@ export default function VideoEditorPage() {
         </div>
         <div className="flex items-center gap-2">
           {subtitles.length > 0 && (
-            <button
-              onClick={handleDownloadSrt}
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-[var(--surface-container-high)] text-[var(--on-surface)] hover:bg-[var(--surface-bright)] border border-[var(--outline-variant)]/20 transition-colors"
-            >
-              ↓ Download SRT
-            </button>
+            <>
+              <button
+                onClick={handleDownloadSrt}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-[var(--surface-container-high)] text-[var(--on-surface)] hover:bg-[var(--surface-bright)] border border-[var(--outline-variant)]/20 transition-colors"
+              >
+                ↓ SRT
+              </button>
+              {localVideoUrl && (
+                <ExportButton
+                  videoUrl={localVideoUrl}
+                  subtitles={subtitles}
+                  style={subtitleStyle}
+                  videoTitle={video.title}
+                />
+              )}
+            </>
           )}
         </div>
       </div>
