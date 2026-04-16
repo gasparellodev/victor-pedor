@@ -1,28 +1,42 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import type { SubtitleStyle } from "@/lib/subtitle-style/types";
 import { DEFAULT_SUBTITLE_STYLE } from "@/lib/subtitle-style/presets";
 
-interface UseSubtitleStyleOptions {
-  videoId?: string | null;
-  initialStyle?: SubtitleStyle | null;
+type Action =
+  | { type: "SET"; style: SubtitleStyle }
+  | { type: "UPDATE"; partial: Partial<SubtitleStyle> }
+  | { type: "RESET" };
+
+function reducer(state: SubtitleStyle, action: Action): SubtitleStyle {
+  switch (action.type) {
+    case "SET":
+      return action.style;
+    case "UPDATE":
+      return { ...state, ...action.partial };
+    case "RESET":
+      return DEFAULT_SUBTITLE_STYLE;
+  }
 }
 
-export function useSubtitleStyle({ videoId, initialStyle }: UseSubtitleStyleOptions = {}) {
-  const [style, setStyle] = useState<SubtitleStyle>(
-    () => initialStyle ?? DEFAULT_SUBTITLE_STYLE
-  );
+interface UseSubtitleStyleReturn {
+  style: SubtitleStyle;
+  updateStyle: (partial: Partial<SubtitleStyle>) => void;
+  resetStyle: () => void;
+  setStyle: (style: SubtitleStyle) => void;
+}
 
-  // Auto-save to DB with debounce (skip initial load)
-  const savedOnceRef = useRef(false);
+export function useSubtitleStyle(videoId?: string | null): UseSubtitleStyleReturn {
+  const [style, dispatch] = useReducer(reducer, DEFAULT_SUBTITLE_STYLE);
+
+  // Auto-save to DB with debounce (skip initial renders)
+  const renderCountRef = useRef(0);
   useEffect(() => {
     if (!videoId) return;
 
-    if (!savedOnceRef.current) {
-      savedOnceRef.current = true;
-      return;
-    }
+    renderCountRef.current++;
+    if (renderCountRef.current <= 1) return;
 
     const timer = setTimeout(async () => {
       try {
@@ -43,12 +57,16 @@ export function useSubtitleStyle({ videoId, initialStyle }: UseSubtitleStyleOpti
   }, [style, videoId]);
 
   const updateStyle = useCallback((partial: Partial<SubtitleStyle>) => {
-    setStyle((prev) => ({ ...prev, ...partial }));
+    dispatch({ type: "UPDATE", partial });
   }, []);
 
   const resetStyle = useCallback(() => {
-    setStyle(DEFAULT_SUBTITLE_STYLE);
+    dispatch({ type: "RESET" });
   }, []);
 
-  return { style, updateStyle, resetStyle };
+  const setStyle = useCallback((s: SubtitleStyle) => {
+    dispatch({ type: "SET", style: s });
+  }, []);
+
+  return { style, updateStyle, resetStyle, setStyle };
 }

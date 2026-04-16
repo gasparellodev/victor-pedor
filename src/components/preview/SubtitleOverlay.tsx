@@ -2,6 +2,7 @@
 
 import type { Subtitle } from "@/types/subtitle";
 import type { SubtitleStyle } from "@/lib/subtitle-style/types";
+import { FONT_PRESETS } from "@/lib/subtitle-style/presets";
 
 interface SubtitleOverlayProps {
   subtitles: Subtitle[];
@@ -24,9 +25,12 @@ export function SubtitleOverlay({ subtitles, currentTime, style }: SubtitleOverl
 
   const posClass = positionClasses[style?.position ?? "bottom"];
 
+  const fontPreset = FONT_PRESETS.find((p) => p.family === style?.fontFamily);
+  const fallbackFamily = fontPreset?.category ?? "sans-serif";
+
   const inlineStyle: React.CSSProperties = style
     ? {
-        fontFamily: `"${style.fontFamily}", sans-serif`,
+        fontFamily: `"${style.fontFamily}", ${fallbackFamily}`,
         fontSize: `${style.fontSize}px`,
         fontWeight: parseInt(style.fontWeight, 10),
         color: style.fontColor,

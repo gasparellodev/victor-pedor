@@ -41,6 +41,10 @@ export default function VideoEditorPage() {
           dispatch({ type: "SET", subtitles: data.video.subtitles });
         }
 
+        if (data.video.subtitleStyle) {
+          setSubtitleStyle(data.video.subtitleStyle);
+        }
+
         if (data.video.blobUrl) {
           setLocalVideoUrl(data.video.blobUrl);
         }
@@ -52,12 +56,9 @@ export default function VideoEditorPage() {
     }
 
     fetchVideo();
-  }, [params.id, dispatch]);
+  }, [params.id, dispatch, setSubtitleStyle]);
 
-  const { style: subtitleStyle, updateStyle } = useSubtitleStyle({
-    videoId: video?.id,
-    initialStyle: video?.subtitleStyle,
-  });
+  const { style: subtitleStyle, updateStyle, setStyle: setSubtitleStyle } = useSubtitleStyle(video?.id);
 
   const activeSubtitle = subtitles.find(
     (s) => currentTime >= s.startTime && currentTime <= s.endTime
