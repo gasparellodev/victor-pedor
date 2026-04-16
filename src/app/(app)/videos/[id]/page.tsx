@@ -7,6 +7,7 @@ import { VideoPlayer } from "@/components/preview/VideoPlayer";
 import { SubtitleOverlay } from "@/components/preview/SubtitleOverlay";
 import { StylePanel } from "@/components/editor/StylePanel";
 import { ExportButton } from "@/components/editor/ExportButton";
+import { EditingSubtitleTextarea } from "@/components/editor/EditingSubtitleTextarea";
 import { useVideoSync } from "@/hooks/useVideoSync";
 import { useSubtitleState } from "@/hooks/useSubtitleState";
 import { useSubtitleStyle } from "@/hooks/useSubtitleStyle";
@@ -434,18 +435,11 @@ export default function VideoEditorPage() {
 
                         {/* Text — editable textarea when editing, read-only p otherwise */}
                         {isEditing ? (
-                          <textarea
-                            ref={(el) => {
-                              if (!el) return;
-                              el.focus();
-                              const len = el.value.length;
-                              el.setSelectionRange(len, len);
-                            }}
+                          <EditingSubtitleTextarea
                             value={sub.text}
                             onChange={(e) => dispatch({ type: "UPDATE_TEXT", index: sub.index, text: e.target.value })}
                             onClick={(e) => e.stopPropagation()}
                             className="w-full bg-transparent text-sm leading-relaxed text-[var(--on-surface)] font-medium resize-none focus:outline-none focus:ring-1 focus:ring-[var(--primary)]/30 rounded p-1 -m-1"
-                            rows={3}
                           />
                         ) : (
                           <p className={`text-sm leading-relaxed ${isActive ? "text-[var(--on-surface)] font-medium" : "text-[var(--on-surface-variant)]"}`}>
