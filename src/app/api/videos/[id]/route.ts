@@ -85,6 +85,9 @@ export async function DELETE(
     }
 
     await deleteBlobVideo(video.blobUrl);
+    if (video.thumbnailUrl) {
+      await deleteBlobVideo(video.thumbnailUrl).catch(() => {});
+    }
     await deleteVideo(id);
 
     return NextResponse.json({ success: true });
