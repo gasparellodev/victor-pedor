@@ -69,6 +69,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              title={item.label}
               className={`flex items-center gap-3 px-4 py-3 text-sm font-medium tracking-wide transition-all duration-200 ease-in-out ${
                 isActive
                   ? "bg-blue-500/10 text-blue-300 border-l-2 border-blue-400"

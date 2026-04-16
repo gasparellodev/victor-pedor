@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import type { Subtitle } from "@/types/subtitle";
 import type { PipelineStage } from "@/types/pipeline";
+import { captureVideoFrame, uploadThumbnail } from "@/lib/thumbnail/generator";
 
 interface PipelineResult {
   stage: PipelineStage;
@@ -63,6 +64,11 @@ export function useProcessPipeline(): PipelineResult {
       const { blobUrl: url, videoId: vid } = await uploadRes.json();
       setVideoId(vid);
       setProgress(100);
+
+      // Generate and upload thumbnail (non-blocking, saves to DB via API)
+      captureVideoFrame(file).then((thumbBlob) =>
+        uploadThumbnail(thumbBlob, vid).catch(() => {})
+      );
 
       // Step 2: Submit transcription
       setStage("transcribing");
