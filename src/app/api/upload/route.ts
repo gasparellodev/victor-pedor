@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { uploadVideo, ALLOWED_VIDEO_TYPES, MAX_FILE_SIZE } from "@/lib/blob/client";
+import { createVideo } from "@/lib/db/videos";
 
 export async function POST(request: Request) {
   try {
@@ -28,9 +29,13 @@ export async function POST(request: Request) {
     }
 
     const { url } = await uploadVideo(file);
-    const jobId = crypto.randomUUID();
 
-    return NextResponse.json({ blobUrl: url, jobId });
+    const video = await createVideo({
+      title: file.name,
+      blobUrl: url,
+    });
+
+    return NextResponse.json({ blobUrl: url, jobId: video.id, videoId: video.id });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Upload failed";
     return NextResponse.json({ error: message }, { status: 500 });

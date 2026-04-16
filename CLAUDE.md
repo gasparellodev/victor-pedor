@@ -24,17 +24,19 @@ Aplicação Next.js que gera legendas SRT a partir de vídeos usando AssemblyAI 
 - `ASSEMBLYAI_API_KEY`
 - `ANTHROPIC_API_KEY`
 - `BLOB_READ_WRITE_TOKEN`
+- `POSTGRES_URL` — Neon Serverless Postgres connection string
 
 ## Arquitetura
 - SSE Híbrido: SSE para steps rápidos, polling leve para espera do AssemblyAI
-- API Routes: upload, transcribe, status polling, correct (SSE), srt download
-- Lib modules: blob, assemblyai, claude, srt, pipeline (cada um com CLAUDE.md)
+- API Routes: upload, transcribe, status polling, correct (SSE), srt download, videos CRUD
+- Lib modules: blob, assemblyai, claude, srt, pipeline, db (cada um com CLAUDE.md)
+- Persistência: Neon Serverless Postgres para metadados de vídeos
 
 ## Estrutura
 ```
 src/
   app/           — Pages e API routes (App Router)
-  lib/           — Módulos de negócio (blob, assemblyai, claude, srt, pipeline)
+  lib/           — Módulos de negócio (blob, assemblyai, claude, srt, pipeline, db)
   components/    — Componentes React (upload, preview, editor)
   hooks/         — Custom hooks (useProcessPipeline, useVideoSync, useSubtitleState)
   types/         — Tipos compartilhados (Subtitle, PipelineState)

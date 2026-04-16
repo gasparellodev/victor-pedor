@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.89.0",
+    "@neondatabase/serverless": "^1.0.2",
     "@vercel/blob": "^2.3.3",
     "assemblyai": "^4.30.0",
     "next": "16.2.4",
