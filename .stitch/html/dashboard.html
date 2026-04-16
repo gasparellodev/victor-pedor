@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#004395",
+                    "on-secondary-fixed-variant": "#304671",
+                    "outline-variant": "#424754",
+                    "on-tertiary-fixed": "#311400",
+                    "tertiary-container": "#df7412",
+                    "surface-tint": "#adc6ff",
+                    "on-secondary": "#182f59",
+                    "tertiary-fixed-dim": "#ffb786",
+                    "on-secondary-fixed": "#001a42",
+                    "on-primary": "#002e6a",
+                    "tertiary": "#ffb786",
+                    "surface-dim": "#10131a",
+                    "secondary-container": "#304671",
+                    "inverse-surface": "#e1e2ec",
+                    "surface-container-high": "#272a31",
+                    "on-tertiary-container": "#461f00",
+                    "inverse-primary": "#005ac2",
+                    "on-surface": "#e1e2ec",
+                    "error-container": "#93000a",
+                    "surface": "#10131a",
+                    "on-primary-container": "#00285d",
+                    "surface-container-lowest": "#0b0e15",
+                    "surface-container-low": "#191b23",
+                    "on-surface-variant": "#c2c6d6",
+                    "primary-fixed": "#d8e2ff",
+                    "on-primary-fixed": "#001a42",
+                    "secondary": "#b1c6f9",
+                    "primary": "#adc6ff",
+                    "on-background": "#e1e2ec",
+                    "inverse-on-surface": "#2e3038",
+                    "on-tertiary": "#502400",
+                    "surface-container-highest": "#32353c",
+                    "primary-fixed-dim": "#adc6ff",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "surface-container": "#1d2027",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#b1c6f9",
+                    "surface-variant": "#32353c",
+                    "background": "#10131a",
+                    "on-error": "#690005",
+                    "primary-container": "#4d8eff",
+                    "on-secondary-container": "#9fb5e7",
+                    "surface-bright": "#363941",
+                    "outline": "#8c909f",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#ffdcc6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-panel {
+        background: rgba(50, 53, 60, 0.6);
+        backdrop-filter: blur(12px);
+      }
+      .brand-gradient {
+        background: linear-gradient(135deg, #adc6ff 0%, #4d8eff 100%);
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30">
+<!-- TopNavBar -->
+<header class="w-full h-16 sticky top-0 z-50 bg-slate-900/50 backdrop-blur-md flex justify-between items-center px-6 w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black text-blue-200 tracking-tighter font-['Manrope']">Lumen Edit</span>
+<div class="hidden md:flex gap-6">
+<a class="text-blue-300 border-b-2 border-blue-400 font-['Manrope'] tracking-tight font-bold transition-colors" href="#">Projects</a>
+<a class="text-slate-400 font-['Manrope'] tracking-tight font-bold hover:text-blue-200 transition-colors" href="#">Assets</a>
+<a class="text-slate-400 font-['Manrope'] tracking-tight font-bold hover:text-blue-200 transition-colors" href="#">Templates</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-blue-200 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-blue-200 transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+</div>
+<button class="hidden sm:block text-slate-400 px-4 py-2 hover:text-blue-200 transition-colors font-['Manrope'] font-bold">Export</button>
+<button class="brand-gradient text-on-primary-container px-5 py-2 rounded-lg font-['Manrope'] font-bold active:scale-95 duration-150">Upgrade</button>
+</div>
+</header>
+<div class="flex min-h-[calc(100vh-64px)]">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col pt-8 pb-6 h-[calc(100vh-64px)] w-64 bg-[#10131a]/80 dark:bg-slate-900/80 sticky top-16 border-r border-outline-variant/20">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant/20">
+<img alt="Organization Logo" class="w-full h-full object-cover" data-alt="minimalist geometric logo for a creative workspace with abstract blue shapes on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClQaNt4EVT3QqlI8DWY0aov563gTuxnm435c96tYf41eX25qrXeLRHyRTa29VvKEw9GOEeLIWe4To9aVAwFuRImh2YLdQq0WCgNM5gVTfJjzLNrQjLTsHYag7iRzsPNjj-jrMGnUFA0mBYNgurVbCkj70BldggFdP0jPUcnB5AUKoxdfPO9pTJWMV-5IkLVneiA0tG258Iwu1XrtLrWoBAHPKUtIeK8oCUiAYLG6_3EwHRTVQCRSsbiyHxnbJ7o2bA0dEeFvw4rrcU"/>
+</div>
+<div>
+<p class="font-['Inter'] text-sm font-medium tracking-wide text-on-surface">Workspace</p>
+<p class="text-[10px] uppercase tracking-widest text-primary font-bold">Pro Plan</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 bg-blue-500/10 text-blue-300 border-l-2 border-blue-400 px-4 py-3 font-['Inter'] text-sm font-medium tracking-wide transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+                    Projects
+                </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-800/50 hover:text-slate-200 font-['Inter'] text-sm font-medium tracking-wide transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="video_library">video_library</span>
+                    Assets
+                </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-800/50 hover:text-slate-200 font-['Inter'] text-sm font-medium tracking-wide transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome_motion">auto_awesome_motion</span>
+                    Templates
+                </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-800/50 hover:text-slate-200 font-['Inter'] text-sm font-medium tracking-wide transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+</nav>
+<div class="mt-auto px-4">
+<button class="w-full brand-gradient text-on-primary-container rounded-lg py-3 flex items-center justify-center gap-2 font-bold mb-6 active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                    New Project
+                </button>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-800/50 hover:text-slate-200 font-['Inter'] text-sm font-medium tracking-wide" href="#">
+<span class="material-symbols-outlined" data-icon="support">support</span>
+                    Help Center
+                </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6 md:p-10 overflow-y-auto">
+<!-- Dashboard Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+<div>
+<h1 class="font-headline text-3xl font-extrabold tracking-tight text-on-surface mb-2">Video Projects</h1>
+<p class="text-on-surface-variant font-body">Manage your transcriptions and cinematic edits.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 w-full md:w-64 text-sm focus:ring-1 focus:ring-primary focus:bg-surface-bright transition-all" placeholder="Search projects..." type="text"/>
+</div>
+<button class="p-2 bg-surface-container-low text-on-surface-variant rounded-lg hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Bento-ish Project Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Project Card 1: Ready -->
+<div class="group bg-surface-container-low rounded-xl overflow-hidden hover:ring-1 hover:ring-outline-variant/40 transition-all duration-300">
+<div class="relative aspect-video">
+<img alt="Cinematic Landscape" class="w-full h-full object-cover" data-alt="majestic mountain range during blue hour with cold mist and sharp cinematic lighting in high definition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOwdLPyVOn_5BwccWz6QPiDFKGhcJz33KeC55DFk4b95LF05hFNZHWkvPkkXpfUZ_P8absP34hmkQ1G4GVDONXNSwwc9Wnx61waaA66-jgz-VLzRsFFFAELzJFok5T5r_K6brjRxvmjAB8qf0-rYogkXf5aLuD_pkMQNlzrurH-5G7RvEFB2mv_l_VlISrsdYMPoes34xPD_XltqSLO7vfG0UuYUHKosGEX0KIx8t64SmsVLNcQk_krhfSfCs5R-BQV_8ibqIEXZ68"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+<div class="absolute bottom-2 right-2 px-2 py-1 glass-panel rounded text-[10px] font-bold tracking-wider text-on-surface">12:45</div>
+<div class="absolute top-2 left-2 px-3 py-1 bg-green-500/90 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">Ready</div>
+</div>
+<div class="p-4">
+<h3 class="font-headline font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Summer Campaign Opener</h3>
+<p class="text-xs text-on-surface-variant font-label uppercase tracking-widest">Edited 2 hours ago</p>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border border-surface bg-slate-700"></div>
+<div class="w-6 h-6 rounded-full border border-surface bg-slate-600"></div>
+</div>
+<button class="text-primary hover:bg-primary/10 p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Project Card 2: In Progress -->
+<div class="group bg-surface-container-low rounded-xl overflow-hidden hover:ring-1 hover:ring-outline-variant/40 transition-all duration-300">
+<div class="relative aspect-video">
+<img alt="Interview Setup" class="w-full h-full object-cover" data-alt="professional interview lighting setup in a moody studio with a person in silhouette against a warm amber backlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5TGRtl93-l4fSLXE-5fjotWZRbB7ZNRdnNejD4w1YItDJJxIMg41govgCq32GYlwD1Z8Ia2fnaTeT2cSCozii1c7Sj7AoXxU62In-bLG5Ccl8BabTG-1VZqfvEGfkXLVrSz1ZMECR9Br6dBldH11rN5S8QMpUO9AA6c5AMCTu0O2WsCd477SkmqruWVdcXE2LpZ-zQXeUn7GSY3cTPAS_0sL5SC4PkDga0qGTpHpDaz3w9cdI9zUZVVU1Zr_4JSoKpAe1ezsmFUjx"/>
+<div class="absolute inset-0 bg-surface-container-low/60 flex flex-col items-center justify-center p-6 text-center">
+<div class="w-12 h-1 bg-surface-container-highest rounded-full overflow-hidden mb-3">
+<div class="w-2/3 h-full brand-gradient"></div>
+</div>
+<span class="text-[10px] font-black uppercase tracking-widest text-primary">Transcribing... 64%</span>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-headline font-bold text-on-surface mb-1">Founder Interview Series</h3>
+<p class="text-xs text-on-surface-variant font-label uppercase tracking-widest">Added 5 hours ago</p>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex items-center gap-2 text-primary-container">
+<span class="material-symbols-outlined text-sm" data-icon="auto_fix_high">auto_fix_high</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">AI Processing</span>
+</div>
+<button class="text-primary hover:bg-primary/10 p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Project Card 3: Ready -->
+<div class="group bg-surface-container-low rounded-xl overflow-hidden hover:ring-1 hover:ring-outline-variant/40 transition-all duration-300">
+<div class="relative aspect-video">
+<img alt="Tech Product" class="w-full h-full object-cover" data-alt="close-up of sleek retro-futuristic hardware with soft blue neon reflections and shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfGqhF7ZlpCKNZpowmKJo0w6iPl_BVUBtT0rIFUegfUhInvNxpYGoBJLu8CxDQUUfjWB7MxRyR561vAMZmZTK-in6AOIl6Oy3kgYoG5WScsufE7FF9jRhcKRR0qWZ6c5Xb6PVENbA69OvD7GoDLqNPPlaI31iTOGSrURt1MqjKgv5VLA50e5vxTKX8mTOCbALJd6zGd3MnlOMLJL-_9a82HORfMSh8E1fNyO8-yf3A8B73BjsXM4Sjtb8anjaEwUD1qRfEm2Knce1Z"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+<div class="absolute bottom-2 right-2 px-2 py-1 glass-panel rounded text-[10px] font-bold tracking-wider text-on-surface">04:12</div>
+<div class="absolute top-2 left-2 px-3 py-1 bg-green-500/90 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">Ready</div>
+</div>
+<div class="p-4">
+<h3 class="font-headline font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Product Feature Teaser</h3>
+<p class="text-xs text-on-surface-variant font-label uppercase tracking-widest">Edited yesterday</p>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border border-surface bg-slate-400"></div>
+</div>
+<button class="text-primary hover:bg-primary/10 p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Project Card 4: Failed -->
+<div class="group bg-surface-container-low rounded-xl overflow-hidden hover:ring-1 hover:ring-outline-variant/40 transition-all duration-300">
+<div class="relative aspect-video">
+<div class="absolute inset-0 bg-error/10 flex flex-col items-center justify-center p-6 text-center">
+<span class="material-symbols-outlined text-error text-3xl mb-2" data-icon="error">error</span>
+<span class="text-[10px] font-black uppercase tracking-widest text-error">Upload Failed</span>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-headline font-bold text-on-surface mb-1 opacity-60">Urban Night Walk B-Roll</h3>
+<p class="text-xs text-on-surface-variant font-label uppercase tracking-widest">3 days ago</p>
+<div class="mt-4 flex items-center justify-between">
+<button class="text-[10px] font-bold uppercase text-primary tracking-widest hover:underline">Retry Upload</button>
+<button class="text-primary hover:bg-primary/10 p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="delete_outline">delete_outline</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Empty State / New Project CTA Card -->
+<button class="group bg-surface-container-lowest border-2 border-dashed border-outline-variant/30 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 flex flex-col items-center justify-center min-h-[280px]">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-outline group-hover:bg-primary-container group-hover:text-on-primary-container transition-all duration-300 mb-4">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</div>
+<h3 class="font-headline font-bold text-on-surface-variant group-hover:text-primary transition-colors">Start New Video</h3>
+<p class="text-[10px] uppercase tracking-widest text-outline mt-1">Upload mp4, mov, or avi</p>
+</button>
+</div>
+</main>
+</div>
+<!-- Mobile BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-xl flex items-center justify-around px-4 z-50 border-t border-outline-variant/10">
+<a class="flex flex-col items-center gap-1 text-blue-300" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Projects</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="video_library">video_library</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Assets</span>
+</a>
+<div class="-mt-8">
+<button class="w-14 h-14 rounded-full brand-gradient shadow-lg flex items-center justify-center text-on-primary-container active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome_motion">auto_awesome_motion</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Templates</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Settings</span>
+</a>
+</nav>
+</body></html>

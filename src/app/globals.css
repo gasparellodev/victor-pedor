@@ -1,60 +1,117 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #12121a;
-  --bg-tertiary: #1a1a25;
-  --bg-hover: #22222f;
-  --bg-active: #2a2a3a;
-  --border-subtle: #1f1f2e;
-  --border-default: #2a2a3d;
-  --border-active: #5b5bd6;
-  --text-primary: #ededef;
-  --text-secondary: #8b8b9e;
-  --text-tertiary: #5c5c72;
-  --accent: #5b5bd6;
-  --accent-hover: #6e6ede;
-  --accent-subtle: rgba(91, 91, 214, 0.12);
-  --danger: #e5484d;
-  --danger-subtle: rgba(229, 72, 77, 0.12);
-  --success: #30a46c;
-  --success-subtle: rgba(48, 164, 108, 0.12);
+  /* SpeakChuk Video — Design System (Stitch/Lumen Edit) */
+  /* Material Design 3 Dark Theme */
+
+  /* Surface colors */
+  --surface: #10131a;
+  --surface-dim: #10131a;
+  --surface-bright: #363941;
+  --surface-container-lowest: #0b0e15;
+  --surface-container-low: #191b23;
+  --surface-container: #1d2027;
+  --surface-container-high: #272a31;
+  --surface-container-highest: #32353c;
+  --surface-variant: #32353c;
+
+  /* Text / On-surface */
+  --on-surface: #e1e2ec;
+  --on-surface-variant: #c2c6d6;
+  --on-background: #e1e2ec;
+
+  /* Primary */
+  --primary: #adc6ff;
+  --primary-container: #4d8eff;
+  --primary-fixed: #d8e2ff;
+  --primary-fixed-dim: #adc6ff;
+  --on-primary: #002e6a;
+  --on-primary-container: #00285d;
+  --on-primary-fixed: #001a42;
+  --inverse-primary: #005ac2;
+
+  /* Secondary */
+  --secondary: #b1c6f9;
+  --secondary-container: #304671;
+  --secondary-fixed: #d8e2ff;
+  --on-secondary: #182f59;
+  --on-secondary-container: #9fb5e7;
+
+  /* Tertiary */
+  --tertiary: #ffb786;
+  --tertiary-container: #df7412;
+  --on-tertiary: #502400;
+
+  /* Error */
+  --error: #ffb4ab;
+  --error-container: #93000a;
+  --on-error: #690005;
+  --on-error-container: #ffdad6;
+
+  /* Outline */
+  --outline: #8c909f;
+  --outline-variant: #424754;
+
+  /* Inverse */
+  --inverse-surface: #e1e2ec;
+  --inverse-on-surface: #2e3038;
+
+  /* Status */
+  --success: #4ade80;
+  --success-bg: rgba(74, 222, 128, 0.15);
+  --warning: #fbbf24;
+  --warning-bg: rgba(251, 191, 36, 0.15);
+
+  /* Brand gradient */
+  --brand-gradient: linear-gradient(135deg, #adc6ff 0%, #4d8eff 100%);
 }
 
 @theme inline {
-  --color-background: var(--bg-primary);
-  --color-foreground: var(--text-primary);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--surface);
+  --color-foreground: var(--on-surface);
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-headline: "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Glass panel */
+.glass-panel {
+  background: rgba(50, 53, 60, 0.6);
+  backdrop-filter: blur(12px);
+}
+
+/* Brand gradient */
+.brand-gradient {
+  background: var(--brand-gradient);
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--surface-container-lowest);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-default);
-  border-radius: 3px;
+  background: var(--outline-variant);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-tertiary);
+  background: var(--outline);
 }
 
 /* Focus ring */
 *:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -80,4 +137,9 @@ body {
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Selection */
+::selection {
+  background: rgba(173, 198, 255, 0.3);
 }
