@@ -1,0 +1,41 @@
+# Victor Pedor — Gerador de Legendas SRT
+
+## Sobre
+Aplicação Next.js que gera legendas SRT a partir de vídeos usando AssemblyAI + Claude API.
+
+## Regras do Projeto
+- TypeScript strict mode — sem `any`
+- TDD obrigatório — testes antes da implementação
+- Cada módulo tem seu próprio CLAUDE.md
+- Validação de input com Zod em todas as API routes
+- Tratamento de erros explícito — nunca engolir erros silenciosamente
+- Componentes React: function components apenas, hooks para lógica
+- Naming: camelCase para variáveis/funções, PascalCase para componentes/tipos
+
+## Comandos
+- `npm run dev` — Inicia o dev server
+- `npm run build` — Build de produção
+- `npm run test` — Roda todos os testes (Vitest)
+- `npm run test:watch` — Testes em modo watch
+- `npm run lint` — ESLint
+- `npm run typecheck` — TypeScript type check
+
+## Env Vars Obrigatórias
+- `ASSEMBLYAI_API_KEY`
+- `ANTHROPIC_API_KEY`
+- `BLOB_READ_WRITE_TOKEN`
+
+## Arquitetura
+- SSE Híbrido: SSE para steps rápidos, polling leve para espera do AssemblyAI
+- API Routes: upload, transcribe, status polling, correct (SSE), srt download
+- Lib modules: blob, assemblyai, claude, srt, pipeline (cada um com CLAUDE.md)
+
+## Estrutura
+```
+src/
+  app/           — Pages e API routes (App Router)
+  lib/           — Módulos de negócio (blob, assemblyai, claude, srt, pipeline)
+  components/    — Componentes React (upload, preview, editor)
+  hooks/         — Custom hooks (useProcessPipeline, useVideoSync, useSubtitleState)
+  types/         — Tipos compartilhados (Subtitle, PipelineState)
+```
