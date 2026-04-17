@@ -1,6 +1,11 @@
 import { AssemblyAI } from "assemblyai";
 import { get } from "@vercel/blob";
 import type { Subtitle } from "@/types/subtitle";
+import {
+  DEFAULT_MAX_CHARS_PER_LINE,
+  DEFAULT_MAX_LINES,
+  type FormatOptions,
+} from "@/lib/subtitle-format";
 
 export interface TranscribedWord {
   text: string;
@@ -16,7 +21,7 @@ export interface TranscriptionStatus {
 }
 
 const PAUSE_THRESHOLD_MS = 500;
-const MAX_WORDS_PER_SUBTITLE = 10;
+const MAX_WORDS_PER_SUBTITLE = 7;
 const SENTENCE_ENDINGS = /[.!?]$/;
 
 function getClient(): AssemblyAI {
@@ -84,8 +89,22 @@ export async function checkTranscriptionStatus(
   return { status: transcript.status as "queued" | "processing" };
 }
 
-export function wordsToSubtitles(words: TranscribedWord[]): Subtitle[] {
+function accumulatedCharCount(words: TranscribedWord[]): number {
+  if (words.length === 0) return 0;
+  let total = 0;
+  for (const w of words) total += w.text.length;
+  return total + (words.length - 1);
+}
+
+export function wordsToSubtitles(
+  words: TranscribedWord[],
+  opts?: Partial<FormatOptions>
+): Subtitle[] {
   if (words.length === 0) return [];
+
+  const maxCharsPerLine = opts?.maxCharsPerLine ?? DEFAULT_MAX_CHARS_PER_LINE;
+  const maxLines = opts?.maxLines ?? DEFAULT_MAX_LINES;
+  const charBudget = maxCharsPerLine * maxLines;
 
   const subtitles: Subtitle[] = [];
   let currentWords: TranscribedWord[] = [words[0]];
@@ -97,8 +116,15 @@ export function wordsToSubtitles(words: TranscribedWord[]): Subtitle[] {
     const hasLongPause = curr.start - prev.end > PAUSE_THRESHOLD_MS;
     const prevEndsSentence = SENTENCE_ENDINGS.test(prev.text);
     const atWordLimit = currentWords.length >= MAX_WORDS_PER_SUBTITLE;
+    const wouldExceedCharBudget =
+      accumulatedCharCount(currentWords) + 1 + curr.text.length > charBudget;
 
-    if (hasLongPause || prevEndsSentence || atWordLimit) {
+    if (
+      hasLongPause ||
+      prevEndsSentence ||
+      atWordLimit ||
+      wouldExceedCharBudget
+    ) {
       subtitles.push(buildSubtitle(currentWords, subtitles.length + 1));
       currentWords = [curr];
     } else {

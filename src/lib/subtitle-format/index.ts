@@ -1,6 +1,7 @@
 export { breakTextIntoLines } from "./break-lines";
 export { splitIntoTwoSubtitles } from "./split-subtitle";
 export { formatSubtitle } from "./format-subtitle";
+export { formatAllSubtitles } from "./format-all";
 export type { FormatResult, FormatModeOptions } from "./format-subtitle";
 export {
   DEFAULT_FORMAT_OPTIONS,

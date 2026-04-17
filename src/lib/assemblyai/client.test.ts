@@ -180,7 +180,7 @@ describe("wordsToSubtitles", () => {
     expect(subtitles[1].text).toBe("E isso também!");
   });
 
-  it("limits to ~10 words per subtitle", () => {
+  it("limits to 7 words per subtitle by default", () => {
     const words: TranscribedWord[] = Array.from({ length: 20 }, (_, i) => ({
       text: `palavra${i}`,
       start: i * 200,
@@ -192,8 +192,59 @@ describe("wordsToSubtitles", () => {
 
     for (const sub of subtitles) {
       const wordCount = sub.text.split(" ").length;
-      expect(wordCount).toBeLessThanOrEqual(10);
+      expect(wordCount).toBeLessThanOrEqual(7);
     }
+  });
+
+  it("breaks when accumulated chars exceed maxCharsPerLine * maxLines (default 84)", () => {
+    const words: TranscribedWord[] = Array.from({ length: 5 }, (_, i) => ({
+      text: "a".repeat(30),
+      start: i * 200,
+      end: i * 200 + 150,
+      confidence: 0.9,
+    }));
+
+    const subtitles = wordsToSubtitles(words);
+
+    for (const sub of subtitles) {
+      expect(sub.text.length).toBeLessThanOrEqual(84);
+    }
+    expect(subtitles.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("respects custom maxCharsPerLine and maxLines", () => {
+    const words: TranscribedWord[] = Array.from({ length: 10 }, (_, i) => ({
+      text: "abcd",
+      start: i * 200,
+      end: i * 200 + 150,
+      confidence: 0.9,
+    }));
+
+    const subtitles = wordsToSubtitles(words, {
+      maxCharsPerLine: 20,
+      maxLines: 1,
+    });
+
+    for (const sub of subtitles) {
+      expect(sub.text.length).toBeLessThanOrEqual(20);
+    }
+  });
+
+  it("does not produce empty subtitles even with a single oversize word", () => {
+    const words: TranscribedWord[] = [
+      {
+        text: "palavragigantequepassadolimite".repeat(5),
+        start: 0,
+        end: 500,
+        confidence: 0.9,
+      },
+      { text: "outra", start: 600, end: 800, confidence: 0.9 },
+    ];
+
+    const subtitles = wordsToSubtitles(words);
+
+    expect(subtitles.every((s) => s.text.length > 0)).toBe(true);
+    expect(subtitles).toHaveLength(2);
   });
 
   it("handles empty words array", () => {
