@@ -9,6 +9,28 @@ import type {
 import { FONT_PRESETS } from "@/lib/subtitle-style/presets";
 import { useDraggableOverlay } from "@/hooks/useDraggableOverlay";
 
+function buildTextStroke(width: number, color: string): string {
+  if (width <= 0) return "none";
+  const offsets = [
+    [-1, -1],
+    [1, -1],
+    [-1, 1],
+    [1, 1],
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1],
+  ];
+  return offsets
+    .flatMap(([dx, dy]) =>
+      Array.from(
+        { length: width },
+        (_, i) => `${dx * (i + 1)}px ${dy * (i + 1)}px 0 ${color}`
+      )
+    )
+    .join(", ");
+}
+
 interface SubtitleOverlayProps {
   subtitles: Subtitle[];
   currentTime: number;
@@ -51,19 +73,28 @@ export function SubtitleOverlay({
   const fontPreset = FONT_PRESETS.find((p) => p.family === style?.fontFamily);
   const fallbackFamily = fontPreset?.category ?? "sans-serif";
 
+  const outlineWidth = style?.outlineWidth ?? 0;
+  const outlineColor = style?.outlineColor ?? "#000000";
+  const textShadow = buildTextStroke(outlineWidth, outlineColor);
+
   const inlineStyle: React.CSSProperties = style
     ? {
         fontFamily: `"${style.fontFamily}", ${fallbackFamily}`,
         fontSize: `${style.fontSize}px`,
         fontWeight: parseInt(style.fontWeight, 10),
         color: style.fontColor,
+        textShadow,
       }
     : {
         color: "#FFFFFF",
+        textShadow,
       };
 
-  const bgColor = style?.backgroundColor ?? "rgba(0, 0, 0, 0.4)";
+  const bgColor = style?.backgroundColor ?? "transparent";
   const showBg = bgColor !== "transparent";
+  const boxClass = showBg
+    ? "px-4 py-2 rounded-lg backdrop-blur-sm border border-white/10"
+    : "";
 
   const containerClass = draggable
     ? "absolute inset-0 z-10"
@@ -97,12 +128,10 @@ export function SubtitleOverlay({
       {effectiveAnchor ? (
         <p
           onPointerDown={onPointerDown}
-          className={`text-2xl font-bold text-center px-4 py-2 rounded-lg font-headline tracking-tight max-w-[85%] whitespace-pre-line leading-relaxed ${
-            showBg ? "backdrop-blur-sm border border-white/10" : ""
-          } ${paragraphCursorClass} ${paragraphPointerClass}`}
+          className={`text-2xl font-bold text-center font-headline tracking-tight max-w-[85%] whitespace-pre-line leading-relaxed ${boxClass} ${paragraphCursorClass} ${paragraphPointerClass}`}
           style={{
             ...inlineStyle,
-            backgroundColor: showBg ? bgColor : "transparent",
+            ...(showBg ? { backgroundColor: bgColor } : {}),
             ...paragraphPositionStyle,
           }}
         >
@@ -112,12 +141,10 @@ export function SubtitleOverlay({
         <div className={paragraphPositionClass}>
           <p
             onPointerDown={onPointerDown}
-            className={`text-2xl font-bold text-center px-4 py-2 rounded-lg font-headline tracking-tight max-w-[85%] whitespace-pre-line leading-relaxed ${
-              showBg ? "backdrop-blur-sm border border-white/10" : ""
-            } ${paragraphCursorClass} ${paragraphPointerClass}`}
+            className={`text-2xl font-bold text-center font-headline tracking-tight max-w-[85%] whitespace-pre-line leading-relaxed ${boxClass} ${paragraphCursorClass} ${paragraphPointerClass}`}
             style={{
               ...inlineStyle,
-              backgroundColor: showBg ? bgColor : "transparent",
+              ...(showBg ? { backgroundColor: bgColor } : {}),
             }}
           >
             {active.text}

@@ -16,6 +16,9 @@ export const AnchorSchema = z.object({
 
 export type SubtitleAnchor = z.infer<typeof AnchorSchema>;
 
+export const OUTLINE_WIDTH_MIN = 0;
+export const OUTLINE_WIDTH_MAX = 8;
+
 export const SubtitleStyleSchema = z.object({
   fontFamily: z.string().min(1).regex(/^[a-zA-Z0-9 -]+$/),
   fontSize: z.number().int().min(FONT_SIZE_MIN).max(FONT_SIZE_MAX),
@@ -23,6 +26,13 @@ export const SubtitleStyleSchema = z.object({
   fontColor: z.string().regex(/^#[0-9a-fA-F]{6,8}$/),
   backgroundColor: z.string().regex(/^#[0-9a-fA-F]{6,8}$|^transparent$/),
   position: z.enum(POSITION_OPTIONS),
+  outlineWidth: z
+    .number()
+    .int()
+    .min(OUTLINE_WIDTH_MIN)
+    .max(OUTLINE_WIDTH_MAX)
+    .optional(),
+  outlineColor: z.string().regex(/^#[0-9a-fA-F]{6,8}$/).optional(),
   maxCharsPerLine: z
     .number()
     .int()

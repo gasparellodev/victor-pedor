@@ -92,4 +92,88 @@ describe("SubtitleOverlay", () => {
     expect(paragraph.className).toContain("pointer-events-auto");
     expect(paragraph.className).toContain("cursor-grab");
   });
+
+  it("renders no background box when no style is provided (default)", () => {
+    render(<SubtitleOverlay subtitles={subtitles} currentTime={2000} />);
+    const paragraph = screen.getByText("Primeira legenda") as HTMLElement;
+    expect(paragraph.style.backgroundColor).toBe("");
+    expect(paragraph.className).not.toContain("backdrop-blur");
+    expect(paragraph.className).not.toContain("border-white");
+  });
+
+  it("renders no background box when style.backgroundColor is transparent", () => {
+    const style = {
+      fontFamily: "Manrope",
+      fontSize: 24,
+      fontWeight: "700" as const,
+      fontColor: "#FFFFFF",
+      backgroundColor: "transparent",
+      position: "bottom" as const,
+      outlineWidth: 2,
+      outlineColor: "#000000",
+    };
+    render(
+      <SubtitleOverlay subtitles={subtitles} currentTime={2000} style={style} />
+    );
+    const paragraph = screen.getByText("Primeira legenda") as HTMLElement;
+    expect(paragraph.style.backgroundColor).toBe("");
+    expect(paragraph.className).not.toContain("backdrop-blur");
+    expect(paragraph.className).not.toContain("border-white");
+  });
+
+  it("renders text-shadow stroke when outlineWidth > 0", () => {
+    const style = {
+      fontFamily: "Manrope",
+      fontSize: 24,
+      fontWeight: "700" as const,
+      fontColor: "#FFFFFF",
+      backgroundColor: "transparent",
+      position: "bottom" as const,
+      outlineWidth: 2,
+      outlineColor: "#000000",
+    };
+    render(
+      <SubtitleOverlay subtitles={subtitles} currentTime={2000} style={style} />
+    );
+    const paragraph = screen.getByText("Primeira legenda") as HTMLElement;
+    expect(paragraph.style.textShadow).not.toBe("");
+    expect(paragraph.style.textShadow).not.toBe("none");
+    const shadowLower = paragraph.style.textShadow.toLowerCase();
+    expect(shadowLower.includes("#000000") || shadowLower.includes("rgb(0, 0, 0)")).toBe(true);
+  });
+
+  it("does not render text-shadow when outlineWidth is 0", () => {
+    const style = {
+      fontFamily: "Manrope",
+      fontSize: 24,
+      fontWeight: "700" as const,
+      fontColor: "#FFFFFF",
+      backgroundColor: "transparent",
+      position: "bottom" as const,
+      outlineWidth: 0,
+      outlineColor: "#000000",
+    };
+    render(
+      <SubtitleOverlay subtitles={subtitles} currentTime={2000} style={style} />
+    );
+    const paragraph = screen.getByText("Primeira legenda") as HTMLElement;
+    expect(paragraph.style.textShadow === "" || paragraph.style.textShadow === "none").toBe(true);
+  });
+
+  it("still renders box when backgroundColor is opt-in (legacy / accessibility)", () => {
+    const style = {
+      fontFamily: "Manrope",
+      fontSize: 24,
+      fontWeight: "700" as const,
+      fontColor: "#FFFFFF",
+      backgroundColor: "#000000CC",
+      position: "bottom" as const,
+    };
+    render(
+      <SubtitleOverlay subtitles={subtitles} currentTime={2000} style={style} />
+    );
+    const paragraph = screen.getByText("Primeira legenda") as HTMLElement;
+    expect(paragraph.style.backgroundColor).not.toBe("");
+    expect(paragraph.style.backgroundColor).not.toBe("transparent");
+  });
 });

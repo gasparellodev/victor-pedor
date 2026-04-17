@@ -8,8 +8,11 @@ Exporta video com legendas burned-in usando ffmpeg.wasm (client-side). Converte 
 ### `generateAssContent(subtitles, style): string`
 Converte array de Subtitle + SubtitleStyle para formato ASS (Advanced SubStation Alpha).
 - Mapeia fontFamily, fontSize, fontWeight → ASS style block
-- Mapeia fontColor, backgroundColor → ASS color codes (AABBGGRR format)
+- Mapeia fontColor, backgroundColor, outlineColor → ASS color codes (AABBGGRR format)
 - Mapeia position → ASS alignment codes (2=bottom, 8=top, 5=center)
+- **BorderStyle dinâmico:** `1` (outline + shadow) quando `backgroundColor`
+  é `"transparent"`, `3` (caixa opaca) quando é cor opaca opt-in. Outline width
+  vem de `style.outlineWidth ?? 0`.
 - Quando `style.anchor` existe, prepende `{\pos(X,Y)}` inline em cada Dialogue
   com coordenadas escaladas para PlayRes (1920×1080) — override do alignment.
 - Gera dialogue events com timestamps no formato ASS (H:MM:SS.cc)

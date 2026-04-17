@@ -10,6 +10,13 @@ ou posicionamento livre via `SubtitleStyle.anchor` (coordenadas em %). Quando
 `draggable` é `true`, o usuário pode arrastar a legenda sobre o vídeo para ajustar
 a posição; cada movimento emite `onAnchorChange`.
 
+**Renderização do texto:**
+- Sem caixa de fundo por padrão (`backgroundColor: "transparent"`). Para
+  o legibilidade, o overlay aplica um stroke via `text-shadow` baseado em
+  `style.outlineWidth` (0–8 px) e `style.outlineColor` (hex).
+- Quando `style.backgroundColor` é uma cor opaca (opt-in), volta a aparecer
+  caixa com `padding`, `rounded-lg`, `backdrop-blur` e borda sutil.
+
 ## Props
 ```typescript
 // VideoPlayer
@@ -41,3 +48,5 @@ interface SubtitleOverlayProps {
 - Drag desabilitado durante edição inline da legenda (caller passa
   `draggable={editingIndex === null}`).
 - Anchor clampado em 0–100% — sem coordenadas fora do container.
+- Outline (stroke) padrão do default style: 2 px preto. Caixa de fundo é
+  opt-in — usar apenas quando contraste extremo for necessário.

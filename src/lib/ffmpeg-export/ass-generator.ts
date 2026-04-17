@@ -52,6 +52,14 @@ function fontWeightToBold(weight: string): number {
 }
 
 /**
+ * BorderStyle 1 = outline + shadow (no box); 3 = opaque box behind text.
+ * Use box only when user opts in to a non-transparent background.
+ */
+function borderStyleFor(style: SubtitleStyle): 1 | 3 {
+  return style.backgroundColor === "transparent" ? 1 : 3;
+}
+
+/**
  * Escape special ASS characters in subtitle text
  */
 function escapeAssText(text: string): string {
@@ -70,9 +78,12 @@ export function generateAssContent(
   style: SubtitleStyle = DEFAULT_SUBTITLE_STYLE
 ): string {
   const primaryColor = cssColorToAss(style.fontColor);
+  const outlineColor = cssColorToAss(style.outlineColor ?? "#000000");
   const backColor = cssColorToAss(style.backgroundColor);
   const alignment = positionToAssAlignment(style.position);
   const bold = fontWeightToBold(style.fontWeight);
+  const outlineWidth = style.outlineWidth ?? 0;
+  const borderStyle = borderStyleFor(style);
 
   const header = `[Script Info]
 Title: SpeakChuk Video Export
@@ -85,7 +96,7 @@ PlayResY: 1080
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,${style.fontFamily},${style.fontSize},${primaryColor},${primaryColor},&H00000000,${backColor},${bold},0,0,0,100,100,0,0,3,0,0,${alignment},40,40,40,1
+Style: Default,${style.fontFamily},${style.fontSize},${primaryColor},${primaryColor},${outlineColor},${backColor},${bold},0,0,0,100,100,0,0,${borderStyle},${outlineWidth},0,${alignment},40,40,40,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text`;
