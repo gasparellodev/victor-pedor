@@ -42,4 +42,54 @@ describe("SubtitleOverlay", () => {
     render(<SubtitleOverlay subtitles={subtitles} currentTime={4000} />);
     expect(screen.getByText("Primeira legenda")).toBeInTheDocument();
   });
+
+  it("renders at bottom-12 when no anchor is set (default position)", () => {
+    render(<SubtitleOverlay subtitles={subtitles} currentTime={2000} />);
+    const paragraph = screen.getByText("Primeira legenda");
+    const wrapper = paragraph.parentElement as HTMLElement;
+    expect(wrapper.className).toContain("bottom-12");
+  });
+
+  it("positions paragraph via inline left/top when style.anchor is set", () => {
+    const style = {
+      fontFamily: "Manrope",
+      fontSize: 24,
+      fontWeight: "700" as const,
+      fontColor: "#FFFFFF",
+      backgroundColor: "#00000080",
+      position: "bottom" as const,
+      anchor: { xPercent: 30, yPercent: 70 },
+    };
+    render(
+      <SubtitleOverlay
+        subtitles={subtitles}
+        currentTime={2000}
+        style={style}
+      />
+    );
+    const paragraph = screen.getByText("Primeira legenda") as HTMLElement;
+    expect(paragraph.style.left).toBe("30%");
+    expect(paragraph.style.top).toBe("70%");
+  });
+
+  it("uses pointer-events-none when draggable is false (default)", () => {
+    const { container } = render(
+      <SubtitleOverlay subtitles={subtitles} currentTime={2000} />
+    );
+    const outer = container.firstElementChild as HTMLElement;
+    expect(outer.className).toContain("pointer-events-none");
+  });
+
+  it("uses pointer-events-auto on paragraph and cursor-grab when draggable is true", () => {
+    render(
+      <SubtitleOverlay
+        subtitles={subtitles}
+        currentTime={2000}
+        draggable
+      />
+    );
+    const paragraph = screen.getByText("Primeira legenda") as HTMLElement;
+    expect(paragraph.className).toContain("pointer-events-auto");
+    expect(paragraph.className).toContain("cursor-grab");
+  });
 });

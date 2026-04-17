@@ -272,7 +272,13 @@ export default function VideoEditorPage() {
               {videoStreamUrl ? (
                 <>
                   <VideoPlayer src={videoStreamUrl} videoRef={videoRef} />
-                  <SubtitleOverlay subtitles={subtitles} currentTime={currentTime} style={subtitleStyle} />
+                  <SubtitleOverlay
+                    subtitles={subtitles}
+                    currentTime={currentTime}
+                    style={subtitleStyle}
+                    draggable={editingIndex === null}
+                    onAnchorChange={(anchor) => updateStyle({ anchor })}
+                  />
                 </>
               ) : (
                 <div className="flex items-center justify-center h-full text-[var(--on-surface-variant)]">

@@ -170,4 +170,39 @@ describe("generateAssContent", () => {
     const ass = generateAssContent(sampleSubtitles);
     expect(ass).toContain(`Style: Default,${DEFAULT_SUBTITLE_STYLE.fontFamily},`);
   });
+
+  it("omits pos override when style has no anchor", () => {
+    const subs: Subtitle[] = [
+      { index: 1, startTime: 0, endTime: 2000, text: "Hello" },
+    ];
+    const ass = generateAssContent(subs, DEFAULT_SUBTITLE_STYLE);
+    expect(ass).not.toMatch(/\\pos\(/);
+  });
+
+  it("includes {\\pos(X,Y)} on every dialogue when anchor is set", () => {
+    const subs: Subtitle[] = [
+      { index: 1, startTime: 0, endTime: 2000, text: "Hello" },
+      { index: 2, startTime: 3000, endTime: 5000, text: "World" },
+    ];
+    const ass = generateAssContent(subs, {
+      ...DEFAULT_SUBTITLE_STYLE,
+      anchor: { xPercent: 50, yPercent: 85 },
+    });
+    const dialogueMatches = ass.match(/Dialogue:[^\n]+/g) ?? [];
+    expect(dialogueMatches).toHaveLength(2);
+    for (const d of dialogueMatches) {
+      expect(d).toContain(`{\\pos(960,918)}`);
+    }
+  });
+
+  it("rounds anchor to PlayRes coordinates (1920x1080)", () => {
+    const subs: Subtitle[] = [
+      { index: 1, startTime: 0, endTime: 2000, text: "Hello" },
+    ];
+    const ass = generateAssContent(subs, {
+      ...DEFAULT_SUBTITLE_STYLE,
+      anchor: { xPercent: 25, yPercent: 50 },
+    });
+    expect(ass).toContain(`{\\pos(480,540)}`);
+  });
 });
