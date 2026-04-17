@@ -64,6 +64,10 @@ export default function VideoEditorPage() {
 
         if (data.video.subtitles) {
           dispatch({ type: "SET", subtitles: data.video.subtitles });
+          // Quebra visual em 2 linhas para vídeos legados. Graças ao
+          // automatic batching do React 19, as duas dispatches colapsam
+          // em um único render e o auto-save não dispara — a persistência
+          // no DB só acontece quando o usuário edita algo explicitamente.
           const loadOptions: FormatOptions = {
             maxCharsPerLine:
               data.video.subtitleStyle?.maxCharsPerLine ??
