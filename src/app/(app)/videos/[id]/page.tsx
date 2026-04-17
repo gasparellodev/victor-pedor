@@ -115,6 +115,40 @@ export default function VideoEditorPage() {
     direction: "vertical",
   });
 
+  const formatOptions = useMemo<FormatOptions>(
+    () => ({
+      maxCharsPerLine:
+        subtitleStyle?.maxCharsPerLine ?? DEFAULT_MAX_CHARS_PER_LINE,
+      maxLines: subtitleStyle?.maxLines ?? DEFAULT_MAX_LINES,
+    }),
+    [subtitleStyle?.maxCharsPerLine, subtitleStyle?.maxLines]
+  );
+
+  // Live reformat: when the user changes maxCharsPerLine or maxLines,
+  // re-break each subtitle's text non-destructively to give instant feedback.
+  useEffect(() => {
+    if (subtitles.length === 0) return;
+    dispatch({
+      type: "REFORMAT_ALL",
+      options: formatOptions,
+      destructive: false,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formatOptions.maxCharsPerLine, formatOptions.maxLines]);
+
+  const handleReformatAll = useCallback(() => {
+    if (subtitles.length === 0) return;
+    const ok = window.confirm(
+      "Reformatar pode dividir legendas longas em duas. Continuar?"
+    );
+    if (!ok) return;
+    dispatch({
+      type: "REFORMAT_ALL",
+      options: formatOptions,
+      destructive: true,
+    });
+  }, [subtitles.length, formatOptions, dispatch]);
+
   const handleDownloadSrt = useCallback(() => {
     const srtContent = generateSrt(subtitles);
     const blob = new Blob([srtContent], { type: "text/srt;charset=utf-8" });
@@ -480,7 +514,11 @@ export default function VideoEditorPage() {
               /* Style panel */
               <div className="space-y-6">
                 <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Caption Style</h3>
-                <StylePanel style={subtitleStyle} onUpdate={updateStyle} />
+                <StylePanel
+                  style={subtitleStyle}
+                  onUpdate={updateStyle}
+                  onReformatAll={handleReformatAll}
+                />
               </div>
             )}
           </div>

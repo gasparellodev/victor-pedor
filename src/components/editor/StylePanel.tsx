@@ -4,10 +4,17 @@ import { useState } from "react";
 import type { SubtitleStyle } from "@/lib/subtitle-style/types";
 import { FONT_SIZE_MIN, FONT_SIZE_MAX } from "@/lib/subtitle-style/types";
 import { FONT_PRESETS } from "@/lib/subtitle-style/presets";
+import {
+  DEFAULT_MAX_CHARS_PER_LINE,
+  DEFAULT_MAX_LINES,
+  MAX_CHARS_PER_LINE_MAX,
+  MAX_CHARS_PER_LINE_MIN,
+} from "@/lib/subtitle-format";
 
 interface StylePanelProps {
   style: SubtitleStyle;
   onUpdate: (partial: Partial<SubtitleStyle>) => void;
+  onReformatAll?: () => void;
 }
 
 const WEIGHT_OPTIONS: { value: SubtitleStyle["fontWeight"]; label: string }[] = [
@@ -25,8 +32,15 @@ const COLOR_PRESETS = [
   { value: "#00000080", className: "bg-gradient-to-tr from-[var(--primary)] to-[var(--tertiary)]" },
 ];
 
-export function StylePanel({ style, onUpdate }: StylePanelProps) {
+export function StylePanel({
+  style,
+  onUpdate,
+  onReformatAll,
+}: StylePanelProps) {
   const [fontOpen, setFontOpen] = useState(false);
+
+  const maxCharsPerLine = style.maxCharsPerLine ?? DEFAULT_MAX_CHARS_PER_LINE;
+  const maxLines = style.maxLines ?? DEFAULT_MAX_LINES;
 
   return (
     <div className="space-y-6">
@@ -159,10 +173,69 @@ export function StylePanel({ style, onUpdate }: StylePanelProps) {
         </div>
       </div>
 
-      {/* Apply to All Segments */}
-      <button className="w-full py-4 bg-[var(--surface-container-highest)] rounded-xl text-xs font-bold uppercase tracking-widest text-[var(--primary)] border border-[var(--primary)]/20 hover:bg-[var(--primary)]/5 transition-all">
-        Apply to All Segments
-      </button>
+      {/* Format — char limit slider + lines toggle */}
+      <div className="space-y-3 pt-2 border-t border-[var(--outline-variant)]/40">
+        <label className="text-[10px] font-bold text-[var(--on-surface-variant)] uppercase tracking-wider">
+          Formato
+        </label>
+
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-[var(--on-surface-variant)]">
+              Limite por linha
+            </span>
+            <span className="text-xs font-bold font-mono text-[var(--on-surface)]">
+              {maxCharsPerLine}
+            </span>
+          </div>
+          <input
+            type="range"
+            min={MAX_CHARS_PER_LINE_MIN}
+            max={MAX_CHARS_PER_LINE_MAX}
+            step={1}
+            value={maxCharsPerLine}
+            onChange={(e) => {
+              const v = parseInt(e.target.value, 10);
+              if (!isNaN(v)) onUpdate({ maxCharsPerLine: v });
+            }}
+            aria-label="Limite de caracteres por linha"
+            className="w-full accent-[var(--primary)]"
+          />
+        </div>
+
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-xs text-[var(--on-surface-variant)]">
+            Linhas
+          </span>
+          <div className="flex bg-[var(--surface-container)] rounded-lg p-1">
+            {([1, 2] as const).map((n) => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => onUpdate({ maxLines: n })}
+                className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${
+                  maxLines === n
+                    ? "bg-[var(--surface-container-highest)] text-[var(--on-surface)]"
+                    : "text-slate-500 hover:text-[var(--on-surface)]"
+                }`}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Reformatar todas — ação destrutiva */}
+      {onReformatAll && (
+        <button
+          type="button"
+          onClick={onReformatAll}
+          className="w-full py-4 bg-[var(--surface-container-highest)] rounded-xl text-xs font-bold uppercase tracking-widest text-[var(--primary)] border border-[var(--primary)]/20 hover:bg-[var(--primary)]/5 transition-all"
+        >
+          Reformatar todas
+        </button>
+      )}
     </div>
   );
 }
