@@ -90,11 +90,15 @@ Style: Default,${style.fontFamily},${style.fontSize},${primaryColor},${primaryCo
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text`;
 
+  const anchorOverride = style.anchor
+    ? `{\\pos(${Math.round((style.anchor.xPercent / 100) * 1920)},${Math.round((style.anchor.yPercent / 100) * 1080)})}`
+    : "";
+
   const dialogueLines = subtitles.map((sub) => {
     const start = msToAssTimestamp(sub.startTime);
     const end = msToAssTimestamp(sub.endTime);
     const text = escapeAssText(sub.text);
-    return `Dialogue: 0,${start},${end},Default,,0,0,0,,${text}`;
+    return `Dialogue: 0,${start},${end},Default,,0,0,0,,${anchorOverride}${text}`;
   });
 
   return `${header}\n${dialogueLines.join("\n")}\n`;
