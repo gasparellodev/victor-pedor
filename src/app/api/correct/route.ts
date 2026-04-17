@@ -1,6 +1,10 @@
 import { z } from "zod/v4";
 import { correctSubtitles } from "@/lib/claude/client";
 import { updateVideo } from "@/lib/db/videos";
+import {
+  DEFAULT_FORMAT_OPTIONS,
+  formatAllSubtitles,
+} from "@/lib/subtitle-format";
 
 const SubtitleSchema = z.object({
   index: z.number(),
@@ -40,15 +44,20 @@ export async function POST(request: Request) {
         send("status", { stage: "correcting" });
 
         const corrected = await correctSubtitles(parsed.data.subtitles);
+        const formatted = formatAllSubtitles(
+          corrected,
+          DEFAULT_FORMAT_OPTIONS,
+          { destructive: false }
+        );
 
         if (videoId) {
           await updateVideo(videoId, {
             status: "ready",
-            subtitles: corrected,
+            subtitles: formatted,
           });
         }
 
-        send("result", { subtitles: corrected });
+        send("result", { subtitles: formatted });
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Correction failed";
