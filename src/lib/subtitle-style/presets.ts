@@ -32,13 +32,19 @@ export const BG_COLOR_PRESETS = [
   "transparent",
 ];
 
+export const FONT_COLOR_PALETTE = ["#FFFFFF", "#FFD600", "#000000"] as const;
+
+export const OUTLINE_COLOR_PALETTE = ["#000000", "#FFFFFF"] as const;
+
 export const DEFAULT_SUBTITLE_STYLE: SubtitleStyle = {
   fontFamily: "Manrope",
   fontSize: 24,
   fontWeight: "700",
   fontColor: "#FFFFFF",
-  backgroundColor: "#00000080",
+  backgroundColor: "transparent",
   position: "bottom",
+  outlineWidth: 2,
+  outlineColor: "#000000",
   maxCharsPerLine: 42,
   maxLines: 2,
 };

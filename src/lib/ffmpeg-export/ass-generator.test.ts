@@ -205,4 +205,52 @@ describe("generateAssContent", () => {
     });
     expect(ass).toContain(`{\\pos(480,540)}`);
   });
+
+  it("emits BorderStyle=1 + Outline width when backgroundColor is transparent", () => {
+    const ass = generateAssContent(sampleSubtitles, {
+      ...DEFAULT_SUBTITLE_STYLE,
+      backgroundColor: "transparent",
+      outlineWidth: 3,
+      outlineColor: "#000000",
+    });
+    // Style row: ...,BorderStyle,Outline,Shadow,Alignment,...
+    // expect ",1,3,0," (BorderStyle=1, Outline=3, Shadow=0)
+    expect(ass).toMatch(/Style:.*,1,3,0,2,/);
+  });
+
+  it("emits BorderStyle=3 (opaque box) when backgroundColor is hex opaque", () => {
+    const ass = generateAssContent(sampleSubtitles, {
+      ...DEFAULT_SUBTITLE_STYLE,
+      backgroundColor: "#000000CC",
+      outlineWidth: 0,
+      outlineColor: "#000000",
+    });
+    expect(ass).toMatch(/Style:.*,3,0,0,2,/);
+  });
+
+  it("maps style.outlineColor to ASS OutlineColour (&HAABBGGRR)", () => {
+    const ass = generateAssContent(sampleSubtitles, {
+      ...DEFAULT_SUBTITLE_STYLE,
+      backgroundColor: "transparent",
+      outlineWidth: 2,
+      outlineColor: "#FFFFFF",
+    });
+    // OutlineColour is the 6th field of Style line (after PrimaryColour x2)
+    // Style: Default,fontFamily,fontSize,&H00FFFFFF,&H00FFFFFF,&H00FFFFFF,...
+    expect(ass).toContain(",&H00FFFFFF,&H00FFFFFF,&H00FFFFFF,");
+  });
+
+  it("defaults outlineWidth to 0 (no stroke) when style omits it", () => {
+    const legacyStyle = {
+      fontFamily: "Manrope",
+      fontSize: 24,
+      fontWeight: "700" as const,
+      fontColor: "#FFFFFF",
+      backgroundColor: "#00000080",
+      position: "bottom" as const,
+    };
+    const ass = generateAssContent(sampleSubtitles, legacyStyle);
+    // Outline=0, BorderStyle=3 (because bg is opaque-ish)
+    expect(ass).toMatch(/Style:.*,3,0,0,2,/);
+  });
 });
