@@ -14,6 +14,11 @@ import { useSubtitleStyle } from "@/hooks/useSubtitleStyle";
 import { useAutoScroll } from "@/hooks/useAutoScroll";
 import { useSidebar } from "@/contexts/SidebarContext";
 import { generateSrt } from "@/lib/srt/generator";
+import {
+  DEFAULT_MAX_CHARS_PER_LINE,
+  DEFAULT_MAX_LINES,
+  type FormatOptions,
+} from "@/lib/subtitle-format";
 import type { Video } from "@/lib/db/schema";
 import type { Subtitle } from "@/types/subtitle";
 
@@ -59,6 +64,22 @@ export default function VideoEditorPage() {
 
         if (data.video.subtitles) {
           dispatch({ type: "SET", subtitles: data.video.subtitles });
+          // Quebra visual em 2 linhas para vídeos legados. Graças ao
+          // automatic batching do React 19, as duas dispatches colapsam
+          // em um único render e o auto-save não dispara — a persistência
+          // no DB só acontece quando o usuário edita algo explicitamente.
+          const loadOptions: FormatOptions = {
+            maxCharsPerLine:
+              data.video.subtitleStyle?.maxCharsPerLine ??
+              DEFAULT_MAX_CHARS_PER_LINE,
+            maxLines:
+              data.video.subtitleStyle?.maxLines ?? DEFAULT_MAX_LINES,
+          };
+          dispatch({
+            type: "REFORMAT_ALL",
+            options: loadOptions,
+            destructive: false,
+          });
         }
         if (data.video.subtitleStyle) {
           setSubtitleStyle(data.video.subtitleStyle);
