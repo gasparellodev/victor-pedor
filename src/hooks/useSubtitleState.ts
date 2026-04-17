@@ -2,6 +2,7 @@
 
 import { useReducer } from "react";
 import type { Subtitle } from "@/types/subtitle";
+import { formatSubtitle, type FormatOptions } from "@/lib/subtitle-format";
 
 export type SubtitleAction =
   | { type: "SET"; subtitles: Subtitle[] }
@@ -12,7 +13,13 @@ export type SubtitleAction =
   | { type: "INSERT"; afterIndex: number }
   | { type: "MERGE"; index: number }
   | { type: "SPLIT"; index: number; splitAt: number }
-  | { type: "SHIFT_ALL"; offsetMs: number };
+  | { type: "SHIFT_ALL"; offsetMs: number }
+  | { type: "FORMAT_TEXT"; index: number; options: FormatOptions }
+  | {
+      type: "REFORMAT_ALL";
+      options: FormatOptions;
+      destructive: boolean;
+    };
 
 function reindex(subtitles: Subtitle[]): Subtitle[] {
   return subtitles.map((s, i) => ({ ...s, index: i + 1 }));
@@ -124,6 +131,34 @@ export function subtitleReducer(
         startTime: Math.max(0, s.startTime + action.offsetMs),
         endTime: Math.max(0, s.endTime + action.offsetMs),
       }));
+
+    case "FORMAT_TEXT": {
+      const idx = state.findIndex((s) => s.index === action.index);
+      if (idx === -1) return state;
+      const { subtitles } = formatSubtitle(state[idx], action.options, {
+        destructive: false,
+      });
+      const formatted = subtitles[0];
+      if (formatted.text === state[idx].text) return state;
+      const result = [...state];
+      result[idx] = formatted;
+      return result;
+    }
+
+    case "REFORMAT_ALL": {
+      if (state.length === 0) return state;
+      const next: Subtitle[] = [];
+      let changed = false;
+      for (const sub of state) {
+        const { subtitles, wasSplit } = formatSubtitle(sub, action.options, {
+          destructive: action.destructive,
+        });
+        if (wasSplit || subtitles[0].text !== sub.text) changed = true;
+        next.push(...subtitles);
+      }
+      if (!changed) return state;
+      return reindex(next);
+    }
 
     default:
       return state;

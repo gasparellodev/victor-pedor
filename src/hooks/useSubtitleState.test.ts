@@ -1,12 +1,15 @@
 import { describe, it, expect } from "vitest";
 import { subtitleReducer } from "./useSubtitleState";
 import type { Subtitle } from "@/types/subtitle";
+import type { FormatOptions } from "@/lib/subtitle-format";
 
 const base: Subtitle[] = [
   { index: 1, startTime: 1000, endTime: 4000, text: "Primeira legenda" },
   { index: 2, startTime: 5000, endTime: 8000, text: "Segunda legenda" },
   { index: 3, startTime: 9000, endTime: 12000, text: "Terceira legenda" },
 ];
+
+const opts42x2: FormatOptions = { maxCharsPerLine: 42, maxLines: 2 };
 
 describe("subtitleReducer", () => {
   it("SET replaces all subtitles", () => {
@@ -122,5 +125,193 @@ describe("subtitleReducer", () => {
     });
     expect(result[0].startTime).toBe(0);
     expect(result[0].endTime).toBe(2000);
+  });
+
+  describe("FORMAT_TEXT", () => {
+    it("inserts \\n in target subtitle text when it exceeds one line", () => {
+      const subs: Subtitle[] = [
+        {
+          index: 1,
+          startTime: 0,
+          endTime: 3000,
+          text: "Esta eh uma legenda um pouco maior que precisa quebrar",
+        },
+      ];
+      const result = subtitleReducer(subs, {
+        type: "FORMAT_TEXT",
+        index: 1,
+        options: opts42x2,
+      });
+      expect(result).toHaveLength(1);
+      expect(result[0].text).toContain("\n");
+    });
+
+    it("leaves short text unchanged", () => {
+      const result = subtitleReducer(base, {
+        type: "FORMAT_TEXT",
+        index: 1,
+        options: opts42x2,
+      });
+      expect(result[0].text).toBe("Primeira legenda");
+    });
+
+    it("is a noop for invalid index", () => {
+      const result = subtitleReducer(base, {
+        type: "FORMAT_TEXT",
+        index: 99,
+        options: opts42x2,
+      });
+      expect(result).toEqual(base);
+    });
+
+    it("preserves timestamps", () => {
+      const subs: Subtitle[] = [
+        {
+          index: 1,
+          startTime: 1234,
+          endTime: 5678,
+          text: "Esta eh uma legenda um pouco maior que precisa quebrar",
+        },
+      ];
+      const result = subtitleReducer(subs, {
+        type: "FORMAT_TEXT",
+        index: 1,
+        options: opts42x2,
+      });
+      expect(result[0].startTime).toBe(1234);
+      expect(result[0].endTime).toBe(5678);
+    });
+
+    it("never inserts or removes subtitles (non-destructive even with overflow)", () => {
+      const subs: Subtitle[] = [
+        {
+          index: 1,
+          startTime: 0,
+          endTime: 10000,
+          text: "Uma legenda muito muito longa que nao cabe em duas linhas do limite padrao e por isso sobra",
+        },
+      ];
+      const result = subtitleReducer(subs, {
+        type: "FORMAT_TEXT",
+        index: 1,
+        options: opts42x2,
+      });
+      expect(result).toHaveLength(1);
+    });
+  });
+
+  describe("REFORMAT_ALL (non-destructive)", () => {
+    it("applies line-break across every subtitle without splitting", () => {
+      const subs: Subtitle[] = [
+        {
+          index: 1,
+          startTime: 0,
+          endTime: 3000,
+          text: "Esta eh uma legenda um pouco maior que precisa quebrar",
+        },
+        { index: 2, startTime: 4000, endTime: 6000, text: "Curta" },
+      ];
+      const result = subtitleReducer(subs, {
+        type: "REFORMAT_ALL",
+        options: opts42x2,
+        destructive: false,
+      });
+      expect(result).toHaveLength(2);
+      expect(result[0].text).toContain("\n");
+      expect(result[1].text).toBe("Curta");
+    });
+
+    it("is idempotent (applying twice produces same result)", () => {
+      const subs: Subtitle[] = [
+        {
+          index: 1,
+          startTime: 0,
+          endTime: 3000,
+          text: "Esta eh uma legenda um pouco maior que precisa quebrar",
+        },
+      ];
+      const first = subtitleReducer(subs, {
+        type: "REFORMAT_ALL",
+        options: opts42x2,
+        destructive: false,
+      });
+      const second = subtitleReducer(first, {
+        type: "REFORMAT_ALL",
+        options: opts42x2,
+        destructive: false,
+      });
+      expect(second).toEqual(first);
+    });
+
+    it("is a noop for empty array", () => {
+      const result = subtitleReducer([], {
+        type: "REFORMAT_ALL",
+        options: opts42x2,
+        destructive: false,
+      });
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe("REFORMAT_ALL (destructive)", () => {
+    it("splits a long subtitle into two and reindexes the array", () => {
+      const subs: Subtitle[] = [
+        {
+          index: 1,
+          startTime: 0,
+          endTime: 10000,
+          text: "Uma legenda muito muito longa que nao cabe em duas linhas do limite padrao e por isso sobra",
+        },
+        { index: 2, startTime: 11000, endTime: 13000, text: "Curta" },
+      ];
+      const result = subtitleReducer(subs, {
+        type: "REFORMAT_ALL",
+        options: opts42x2,
+        destructive: true,
+      });
+      expect(result).toHaveLength(3);
+      expect(result.map((s) => s.index)).toEqual([1, 2, 3]);
+      expect(result[2].text).toBe("Curta");
+    });
+
+    it("preserves the order of subtitles after reindex", () => {
+      const subs: Subtitle[] = [
+        { index: 1, startTime: 0, endTime: 2000, text: "A" },
+        {
+          index: 2,
+          startTime: 2500,
+          endTime: 12000,
+          text: "Uma legenda muito muito longa que nao cabe em duas linhas do limite padrao e por isso sobra",
+        },
+        { index: 3, startTime: 13000, endTime: 14000, text: "B" },
+      ];
+      const result = subtitleReducer(subs, {
+        type: "REFORMAT_ALL",
+        options: opts42x2,
+        destructive: true,
+      });
+      expect(result).toHaveLength(4);
+      expect(result[0].text).toBe("A");
+      expect(result[3].text).toBe("B");
+      expect(result.map((s) => s.index)).toEqual([1, 2, 3, 4]);
+    });
+
+    it("is a noop for empty array", () => {
+      const result = subtitleReducer([], {
+        type: "REFORMAT_ALL",
+        options: opts42x2,
+        destructive: true,
+      });
+      expect(result).toEqual([]);
+    });
+
+    it("does not split subtitles that fit within the limit", () => {
+      const result = subtitleReducer(base, {
+        type: "REFORMAT_ALL",
+        options: opts42x2,
+        destructive: true,
+      });
+      expect(result).toHaveLength(base.length);
+    });
   });
 });
