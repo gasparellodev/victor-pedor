@@ -124,6 +124,73 @@ describe("DEFAULT_SUBTITLE_STYLE", () => {
   it("uses bottom position by default", () => {
     expect(DEFAULT_SUBTITLE_STYLE.position).toBe("bottom");
   });
+
+  it("defaults maxCharsPerLine to 42", () => {
+    expect(DEFAULT_SUBTITLE_STYLE.maxCharsPerLine).toBe(42);
+  });
+
+  it("defaults maxLines to 2", () => {
+    expect(DEFAULT_SUBTITLE_STYLE.maxLines).toBe(2);
+  });
+
+  it("does not set anchor by default (keeps bottom-center fallback)", () => {
+    expect(DEFAULT_SUBTITLE_STYLE.anchor).toBeUndefined();
+  });
+});
+
+describe("SubtitleStyleSchema backward compatibility", () => {
+  it("accepts legacy style without maxCharsPerLine/maxLines/anchor", () => {
+    const legacy = {
+      fontFamily: "Manrope",
+      fontSize: 24,
+      fontWeight: "700",
+      fontColor: "#FFFFFF",
+      backgroundColor: "#00000080",
+      position: "bottom",
+    };
+    const result = SubtitleStyleSchema.safeParse(legacy);
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects maxCharsPerLine below minimum", () => {
+    const result = SubtitleStyleSchema.safeParse({
+      ...DEFAULT_SUBTITLE_STYLE,
+      maxCharsPerLine: 10,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects maxCharsPerLine above maximum", () => {
+    const result = SubtitleStyleSchema.safeParse({
+      ...DEFAULT_SUBTITLE_STYLE,
+      maxCharsPerLine: 80,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects maxLines other than 1 or 2", () => {
+    const result = SubtitleStyleSchema.safeParse({
+      ...DEFAULT_SUBTITLE_STYLE,
+      maxLines: 3,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts a valid anchor", () => {
+    const result = SubtitleStyleSchema.safeParse({
+      ...DEFAULT_SUBTITLE_STYLE,
+      anchor: { xPercent: 50, yPercent: 85 },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects anchor with xPercent out of range", () => {
+    const result = SubtitleStyleSchema.safeParse({
+      ...DEFAULT_SUBTITLE_STYLE,
+      anchor: { xPercent: 120, yPercent: 50 },
+    });
+    expect(result.success).toBe(false);
+  });
 });
 
 describe("POSITION_OPTIONS", () => {

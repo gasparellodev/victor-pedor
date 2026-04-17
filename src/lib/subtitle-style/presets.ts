@@ -39,4 +39,6 @@ export const DEFAULT_SUBTITLE_STYLE: SubtitleStyle = {
   fontColor: "#FFFFFF",
   backgroundColor: "#00000080",
   position: "bottom",
+  maxCharsPerLine: 42,
+  maxLines: 2,
 };
