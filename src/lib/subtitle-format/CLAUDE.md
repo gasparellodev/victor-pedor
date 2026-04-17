@@ -34,6 +34,8 @@ Base algoritmica reutilizada pelo pipeline de geracao (AssemblyAI + pos-Claude),
 5. **Normaliza whitespace**: colapsa `\s+` → ` ` e faz trim (incluindo `\n` pre-existente — o texto eh sempre reformatado do zero).
 6. **`\n` eh a fonte de verdade**: `formatSubtitle` devolve texto com `\n` entre as linhas. Renderizacao (`whitespace-pre-line`) e export (SRT/ASS) ja esperam esse formato.
 7. **Split reindex eh responsabilidade do caller**: `splitIntoTwoSubtitles` devolve `index=0` nos dois subtitulos.
+8. **Limitacao Unicode**: o modulo usa `string.length` (UTF-16 code units). Caracteres fora do BMP (emojis, alguns ideogramas) contam como 2 code units e podem produzir linhas visualmente "mais curtas" que o limite. Aceitavel para PT-BR em NFC. Documentado.
+9. **Invariante de linha maxima pode ser violada**: quando a primeira palavra do texto eh maior que `maxCharsPerLine`, a linha 1 excede o limite sem reportar overflow (mesma regra do caso "palavra unica"). Callers devem aceitar overflow visual nesse caso.
 
 ## Dependencias
 - `@/types/subtitle` — tipo `Subtitle`

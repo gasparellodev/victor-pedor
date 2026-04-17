@@ -91,6 +91,15 @@ describe("formatSubtitle", () => {
     });
   });
 
+  it("non-destructive + maxLines=1 + overflow: keeps single line with appended overflow", () => {
+    const opts20x1: FormatOptions = { maxCharsPerLine: 20, maxLines: 1 };
+    const sub = makeSubtitle("texto que passa de vinte chars com certeza");
+    const result = formatSubtitle(sub, opts20x1, { destructive: false });
+    expect(result.subtitles).toHaveLength(1);
+    expect(result.subtitles[0].text).not.toContain("\n");
+    expect(result.wasSplit).toBe(false);
+  });
+
   it("is idempotent (applying twice produces same result) in non-destructive mode", () => {
     const sub = makeSubtitle(
       "Esta eh uma legenda um pouco maior que precisa quebrar"

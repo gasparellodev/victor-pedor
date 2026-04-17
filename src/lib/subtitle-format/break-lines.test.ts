@@ -87,4 +87,13 @@ describe("breakTextIntoLines", () => {
     const result = breakTextIntoLines("   ola mundo   ", opts42x2);
     expect(result.lines).toEqual(["ola mundo"]);
   });
+
+  it("when first word exceeds maxCharsPerLine, line 1 may overflow without reporting overflow", () => {
+    const longFirst = "a".repeat(45);
+    const text = `${longFirst} resto`;
+    const result = breakTextIntoLines(text, opts42x2);
+    expect(result.lines[0]).toBe(longFirst);
+    expect(result.lines[0].length).toBeGreaterThan(42);
+    expect(result.overflow).toBeNull();
+  });
 });
